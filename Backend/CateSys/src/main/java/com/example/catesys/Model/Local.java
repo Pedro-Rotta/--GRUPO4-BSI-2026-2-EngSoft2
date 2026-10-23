@@ -1,12 +1,17 @@
 package com.example.catesys.Model;
 
 public class Local {
+    private int id;
     private String nome;
     private int capacidade;
 
-    public Local(int id, String nome, int capacidade) {
+    public Local(String nome, int capacidade) {
         this.nome = nome;
         this.capacidade = capacidade;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getNome() {
