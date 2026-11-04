@@ -29,3 +29,33 @@ public class Conexao {
 - Não colocar validação nem regra de negócio.
 - Não fazer commit/rollback por conta própria (quem decide é a `Control`).
 - Não ser chamado pela `View` nem pela `Control` direto: o caminho é Control → Model → DAO.
+
+
+## Modelo:
+@Override
+public boolean gravar(Catequizando c) throws SQLException {
+String sql = "INSERT INTO catequizando (nome, data_nascimento, nome_responsavel, telefone_responsavel) VALUES (?, ?, ?, ?)";
+try (var ps = Conexao.getInstancia().getConnection().prepareStatement(sql)) {
+ps.setString(1, c.getNome());
+ps.setDate(2, new java.sql.Date(c.getDataNascimento().getTime()));
+ps.setString(3, c.getNomeResponsavel());
+ps.setString(4, c.getTelefoneResponsavel());
+return ps.executeUpdate() > 0;
+}
+}
+@Override
+public boolean alterar(Catequizando obj) throws SQLException{
+return true;
+}
+@Override
+public boolean excluir(int id) throws SQLException{
+return true;
+}
+@Override
+public Catequizando buscarPorId(int id) throws SQLException{
+return new Catequizando();
+}
+@Override
+public List<Catequizando> buscarTodos() throws SQLException{
+return new ArrayList<Catequizando>();
+}
