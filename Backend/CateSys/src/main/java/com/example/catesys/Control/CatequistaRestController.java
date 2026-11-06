@@ -61,6 +61,7 @@ public class CatequistaRestController {
                     dados.email(),
                     secretaria
             );
+
         } else {
             catequista = Catequista.reconstituir(
                     id,
@@ -141,7 +142,8 @@ public class CatequistaRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CatequistaResponse> buscarPorId(
-            @PathVariable int id) throws SQLException {
+            @PathVariable int id)
+            throws SQLException {
 
         Catequista catequista = control.buscarPorId(id);
 
@@ -156,7 +158,8 @@ public class CatequistaRestController {
 
     @GetMapping("/nome")
     public List<CatequistaResponse> buscarPorNome(
-            @RequestParam String nome) throws SQLException {
+            @RequestParam String nome)
+            throws SQLException {
 
         return control.buscarPorNome(nome)
                 .stream()
@@ -166,7 +169,8 @@ public class CatequistaRestController {
 
     @GetMapping("/cpf")
     public ResponseEntity<CatequistaResponse> buscarPorCpf(
-            @RequestParam String cpf) throws SQLException {
+            @RequestParam String cpf)
+            throws SQLException {
 
         Catequista catequista = control.buscarPorCpf(cpf);
 
@@ -185,17 +189,15 @@ public class CatequistaRestController {
             @RequestBody CatequistaRequest dados)
             throws SQLException {
 
-        if (control.buscarPorId(id) == null) {
+        Catequista original = control.buscarPorId(id);
+
+        if (original == null) {
             return ResponseEntity.notFound().build();
         }
 
         Catequista catequista = montarCatequista(dados, id);
 
-        Catequista original = control.buscarPorId(id);
-
-        if (original != null) {
-            catequista.setSecretaria(original.getSecretaria());
-        }
+        catequista.setSecretaria(original.getSecretaria());
 
         if (!control.alterar(catequista)) {
             return ResponseEntity.notFound().build();
@@ -210,7 +212,8 @@ public class CatequistaRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
-            @PathVariable int id) throws SQLException {
+            @PathVariable int id)
+            throws SQLException {
 
         if (!control.excluir(id)) {
             return ResponseEntity.notFound().build();

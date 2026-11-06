@@ -1,13 +1,10 @@
+
 package com.example.catesys.Model;
 
-import com.example.catesys.DAO.CatequistaDAO;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 
 public class Catequista {
+
     private int id;
     private String nome;
     private String cpf;
@@ -18,7 +15,8 @@ public class Catequista {
     private Date dataFim;
     private String senha;
 
-    public Catequista(String nome, String cpf, String telefone, String email, Secretaria secretaria) {
+    public Catequista(String nome, String cpf, String telefone,
+                      String email, Secretaria secretaria) {
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;
@@ -35,51 +33,22 @@ public class Catequista {
             Integer secretariaId,
             Date dataInicio,
             Date dataFim) {
+
         Secretaria secretaria = null;
 
         if (secretariaId != null) {
             secretaria = Secretaria.reconstituir(secretariaId);
         }
+
         Catequista c = new Catequista(
                 nome, cpf, telefone, email, secretaria
         );
+
         c.id = id;
         c.dataInicio = dataInicio;
         c.dataFim = dataFim;
+
         return c;
-    }
-
-    public boolean gravar(Connection conexao) throws SQLException {
-        return new CatequistaDAO(conexao).gravar(this);
-    }
-
-    public boolean alterar(Connection conexao) throws SQLException {
-        return new CatequistaDAO(conexao).alterar(this);
-    }
-
-    public static boolean excluir(Connection conexao, int id) throws SQLException {
-        return new CatequistaDAO(conexao).excluir(id);
-    }
-
-    public static Catequista buscarPorId(Connection conexao, int id)
-            throws SQLException {
-        return new CatequistaDAO(conexao).buscarPorId(id);
-    }
-
-    public static List<Catequista> buscarTodos(Connection conexao)
-            throws SQLException {
-        return new CatequistaDAO(conexao).buscarTodos();
-    }
-
-
-    public static List<Catequista> buscarPorNome(
-            Connection conexao, String nome) throws SQLException {
-        return new CatequistaDAO(conexao).buscarPorNome(nome);
-    }
-
-    public static Catequista buscarPorCpf(
-            Connection conexao, String cpf) throws SQLException {
-        return new CatequistaDAO(conexao).buscarPorCpf(cpf);
     }
 
     public int getId() {
@@ -151,6 +120,7 @@ public class Catequista {
     }
 
     public void validarDados() {
+
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("Nome obrigatorio");
         }
@@ -179,6 +149,7 @@ public class Catequista {
     }
 
     private boolean validarCpf(String cpf) {
+
         if (!cpf.matches("\\d{11}")) {
             return false;
         }
@@ -188,6 +159,7 @@ public class Catequista {
         }
 
         for (int tamanho = 9; tamanho <= 10; tamanho++) {
+
             int soma = 0;
 
             for (int i = 0; i < tamanho; i++) {
@@ -208,5 +180,4 @@ public class Catequista {
 
         return true;
     }
-
 }

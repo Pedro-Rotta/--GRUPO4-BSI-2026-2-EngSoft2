@@ -1,7 +1,7 @@
 
 package com.example.catesys.Control;
 
-import com.example.catesys.Control.Conexao;
+import com.example.catesys.DAO.CatequistaDAO;
 import com.example.catesys.Model.Catequista;
 
 import java.sql.Connection;
@@ -16,8 +16,12 @@ public class GerenciarCatequistaControl {
         Conexao conexao = Conexao.getInstancia();
 
         try {
-            verificarCpfDuplicado(conexao.getConnection(), catequista);
-            boolean gravou = catequista.gravar(conexao.getConnection());
+            Connection conn = conexao.getConnection();
+            CatequistaDAO dao = new CatequistaDAO(conn);
+
+            verificarCpfDuplicado(dao, catequista);
+
+            boolean gravou = dao.gravar(catequista);
 
             if (gravou) {
                 conexao.commit();
@@ -43,8 +47,12 @@ public class GerenciarCatequistaControl {
         Conexao conexao = Conexao.getInstancia();
 
         try {
-            verificarCpfDuplicado(conexao.getConnection(), catequista);
-            boolean alterou = catequista.alterar(conexao.getConnection());
+            Connection conn = conexao.getConnection();
+            CatequistaDAO dao = new CatequistaDAO(conn);
+
+            verificarCpfDuplicado(dao, catequista);
+
+            boolean alterou = dao.alterar(catequista);
 
             if (alterou) {
                 conexao.commit();
@@ -68,9 +76,10 @@ public class GerenciarCatequistaControl {
         Conexao conexao = Conexao.getInstancia();
 
         try {
-            boolean excluiu = Catequista.excluir(
-                    conexao.getConnection(), id
-            );
+            CatequistaDAO dao =
+                    new CatequistaDAO(conexao.getConnection());
+
+            boolean excluiu = dao.excluir(id);
 
             if (excluiu) {
                 conexao.commit();
@@ -94,9 +103,11 @@ public class GerenciarCatequistaControl {
         Conexao conexao = Conexao.getInstancia();
 
         try {
-            return Catequista.buscarPorId(
-                    conexao.getConnection(), id
-            );
+            CatequistaDAO dao =
+                    new CatequistaDAO(conexao.getConnection());
+
+            return dao.buscarPorId(id);
+
         } finally {
             conexao.rollback();
         }
@@ -106,15 +117,19 @@ public class GerenciarCatequistaControl {
         Conexao conexao = Conexao.getInstancia();
 
         try {
-            return Catequista.buscarTodos(
-                    conexao.getConnection()
-            );
+            CatequistaDAO dao =
+                    new CatequistaDAO(conexao.getConnection());
+
+            return dao.buscarTodos();
+
         } finally {
             conexao.rollback();
         }
     }
 
-    public List<Catequista> buscarPorNome(String nome) throws SQLException {
+    public List<Catequista> buscarPorNome(String nome)
+            throws SQLException {
+
         if (nome == null) {
             throw new IllegalArgumentException("Nome nao pode ser null");
         }
@@ -122,15 +137,19 @@ public class GerenciarCatequistaControl {
         Conexao conexao = Conexao.getInstancia();
 
         try {
-            return Catequista.buscarPorNome(
-                    conexao.getConnection(), nome
-            );
+            CatequistaDAO dao =
+                    new CatequistaDAO(conexao.getConnection());
+
+            return dao.buscarPorNome(nome);
+
         } finally {
             conexao.rollback();
         }
     }
 
-    public Catequista buscarPorCpf(String cpf) throws SQLException {
+    public Catequista buscarPorCpf(String cpf)
+            throws SQLException {
+
         if (cpf == null || cpf.isBlank()) {
             throw new IllegalArgumentException("CPF obrigatorio");
         }
@@ -138,35 +157,38 @@ public class GerenciarCatequistaControl {
         Conexao conexao = Conexao.getInstancia();
 
         try {
-            return Catequista.buscarPorCpf(
-                    conexao.getConnection(), cpf
-            );
+            CatequistaDAO dao =
+                    new CatequistaDAO(conexao.getConnection());
+
+            return dao.buscarPorCpf(cpf);
+
         } finally {
             conexao.rollback();
         }
     }
 
-    private void validarCatequista(Catequista c) {
-        if (c == null) {
+    private void validarCatequista(Catequista catequista) {
+        if (catequista == null) {
             throw new IllegalArgumentException("Catequista obrigatorio");
         }
 
-        c.validarDados();
+        catequista.validarDados();
     }
 
-    private void verificarCpfDuplicado(Connection conn, Catequista c)
-            throws SQLException {
+    private void verificarCpfDuplicado(
+            CatequistaDAO dao,
+            Catequista catequista
+    ) throws SQLException {
 
-        Catequista existente = Catequista.buscarPorCpf(
-                conn, c.getCpf()
-        );
+        Catequista existente =
+                dao.buscarPorCpf(catequista.getCpf());
 
-        if (existente != null && existente.getId() != c.getId()) {
+        if (existente != null &&
+                existente.getId() != catequista.getId()) {
+
             throw new IllegalArgumentException(
                     "Ja existe um catequista cadastrado com esse CPF"
             );
         }
     }
-
-
 }
