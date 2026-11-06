@@ -1,4 +1,4 @@
-package com.example.catesys.DAO;
+package com.example.catesys.Control;
 
 import java.io.InputStream;
 import java.sql.Connection;

@@ -1,7 +1,7 @@
 
 package com.example.catesys.Control;
 
-import com.example.catesys.DAO.Conexao;
+import com.example.catesys.Control.Conexao;
 import com.example.catesys.Model.Catequista;
 
 import java.sql.Connection;
