@@ -2,7 +2,9 @@ package com.example.catesys.Model;
 
 import com.example.catesys.Model.Enums.Sexo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Catequizando {
     private int id;
@@ -50,6 +52,57 @@ public class Catequizando {
         c.id = id;
 
         return c;
+    }
+
+    private static final String REGEX_TELEFONE = "\\(\\d{2}\\) \\d{4,5}-\\d{4}";
+    private static final String REGEX_EMAIL = "^[\\w.+-]+@[\\w-]+\\.[\\w.]+$";
+    private static final String REGEX_CEP = "\\d{5}-\\d{3}";
+    private static final String REGEX_UF = "[A-Z]{2}";
+
+    public List<String> validar() {
+        List<String> erros = new ArrayList<>();
+
+        if (vazio(nome))
+            erros.add("Nome é obrigatório");
+        if (dataNascimento == null)
+            erros.add("Data de nascimento é obrigatória");
+        else if (dataNascimento.after(new Date()))
+            erros.add("Data de nascimento não pode ser futura");
+        if (vazio(nomeResponsavel))
+            erros.add("Nome do responsável é obrigatório");
+        if (telefoneResponsavel == null || !telefoneResponsavel.matches(REGEX_TELEFONE))
+            erros.add("Telefone do responsável inválido (formato: (99) 99999-9999)");
+
+        if (!vazio(telefone) && !telefone.matches(REGEX_TELEFONE))
+            erros.add("Telefone inválido (formato: (99) 99999-9999)");
+        if (!vazio(email) && !email.matches(REGEX_EMAIL))
+            erros.add("E-mail inválido");
+        if (!vazio(emailResponsavel) && !emailResponsavel.matches(REGEX_EMAIL))
+            erros.add("E-mail do responsável inválido");
+        if (!vazio(cep) && !cep.matches(REGEX_CEP))
+            erros.add("CEP inválido (formato: 99999-999)");
+        if (!vazio(uf) && !uf.matches(REGEX_UF))
+            erros.add("UF inválida (use a sigla com 2 letras, ex.: SP)");
+
+        tamanhoMaximo(erros, "Nome", nome, 100);
+        tamanhoMaximo(erros, "Nome do responsável", nomeResponsavel, 100);
+        tamanhoMaximo(erros, "Documento", documento, 20);
+        tamanhoMaximo(erros, "E-mail", email, 45);
+        tamanhoMaximo(erros, "Endereço", endereco, 45);
+        tamanhoMaximo(erros, "Bairro", bairro, 45);
+        tamanhoMaximo(erros, "Cidade", cidade, 45);
+        tamanhoMaximo(erros, "E-mail do responsável", emailResponsavel, 45);
+
+        return erros;
+    }
+
+    private static boolean vazio(String valor) {
+        return valor == null || valor.isBlank();
+    }
+
+    private static void tamanhoMaximo(List<String> erros, String campo, String valor, int maximo) {
+        if (valor != null && valor.length() > maximo)
+            erros.add(campo + " deve ter no máximo " + maximo + " caracteres");
     }
 
     public int getId() {
@@ -133,7 +186,7 @@ public class Catequizando {
     }
 
     public void setUf(String uf) {
-        this.uf = uf;
+        this.uf = uf == null ? null : uf.trim().toUpperCase();
     }
 
     public String getCep() {
