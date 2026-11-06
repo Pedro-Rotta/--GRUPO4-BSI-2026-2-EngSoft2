@@ -19,6 +19,15 @@ public class Secretaria {
         this.senha = senha;
     }
 
+    public Secretaria() {
+    }
+
+    public static Secretaria reconstituir(int id) {
+        Secretaria secretaria = new Secretaria();
+        secretaria.id = id;
+        return secretaria;
+    }
+
     public int getId() {
         return id;
     }

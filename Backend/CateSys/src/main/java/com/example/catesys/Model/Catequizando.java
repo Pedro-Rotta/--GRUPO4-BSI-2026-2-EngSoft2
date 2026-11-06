@@ -29,6 +29,29 @@ public class Catequizando {
         this.documento = documento;
     }
 
+    public Catequizando() {
+    }
+
+    public static Catequizando reconstituir(
+            int id,
+            String nome,
+            Date dataNascimento,
+            String nomeResponsavel,
+            String telefoneResponsavel) {
+
+        Catequizando c = new Catequizando(
+                nome,
+                dataNascimento,
+                nomeResponsavel,
+                telefoneResponsavel,
+                null
+        );
+
+        c.id = id;
+
+        return c;
+    }
+
     public int getId() {
         return id;
     }
