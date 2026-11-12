@@ -9,8 +9,9 @@ Pacote: `com.example.catesys.DAO`
 ## Como codificar
 - O DAO só tem **métodos de persistir e recuperar**: `gravar`, `alterar`, `excluir`,
   `buscarPorId`, `buscarTodos`, mais as buscas com filtro específicas da entidade.
-- É **instanciado pela `Control`**, que entrega a `Conexao` no construtor com a transação já aberta.
-- **Recebe a Model (ou o id) por parâmetro** e devolve Models: `dao.gravar(catequizando)`.
+- É **instanciado pela `Model`** (View → Control → Model → DAO). A `Conexao` vem da `Control`,
+  passa pela Model e chega no construtor do DAO com a transação já aberta.
+- **Recebe a Model (ou o id) por parâmetro** e devolve Models: dentro da Model, `dao.gravar(this)`.
 - Monta as Models lidas do banco com o `reconstituir(...)` da entidade.
 - Todo o **SQL** do sistema fica aqui, sempre com `PreparedStatement` e `?`.
 - Data nula vai com `ps.setNull(posicao, Types.DATE)`.
@@ -58,5 +59,5 @@ public class CatequizandoDAO implements IDAO<Catequizando> {
 ## O que NÃO fazer
 - Não colocar validação nem regra de negócio.
 - Não fazer `commit`/`rollback` (quem decide é a `Control`).
-- Não buscar a conexão sozinho (`Conexao.getInstancia()` dentro do DAO): usa a que a `Control` entregou.
+- Não buscar a conexão sozinho (`Conexao.getInstancia()` dentro do DAO): usa a que recebeu no construtor.
 - Não concatenar valores dentro do SQL.

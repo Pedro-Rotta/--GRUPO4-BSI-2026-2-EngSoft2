@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CateSys - Atribuir Local</title>
+    <link rel="stylesheet" href="catequizandos.css">
+</head>
+<body>
+
+<header>
+    <h1>CateSys</h1>
+    <p>Paróquia São Francisco Xavier — Atribuir Local à Turma</p>
+</header>
+
+<main>
+    <div id="notificacao" class="notificacao oculto" role="status" aria-live="polite"></div>
+
+    <!-- Passo 1: escolher a turma -->
+    <section class="painel">
+        <h2>Atribuir Local à Turma</h2>
+        <p class="dica">Informe o id da turma ou escolha na lista abaixo.
+            <a href="ofertar-turma.html">Ofertar nova turma</a></p>
+        <form id="formBusca" class="filtros">
+            <div class="campo">
+                <label for="turmaId">Id da turma</label>
+                <input id="turmaId" type="number" min="1" step="1" required>
+            </div>
+            <button type="submit" class="btn primario">Buscar turma</button>
+        </form>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Etapa</th>
+                    <th>Período</th>
+                    <th>Catequista</th>
+                    <th>Local</th>
+                    <th>Horário</th>
+                    <th>Status</th>
+                    <th class="col-acoes">Ações</th>
+                </tr>
+                </thead>
+                <tbody id="tabelaTurmas">
+                <tr><td colspan="8" class="vazio">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Passos 2 a 6: local e horário -->
+    <section id="painelLocal" class="painel oculto">
+        <h2 id="tituloTurma">Turma</h2>
+        <div class="tabela-container">
+            <table>
+                <tbody id="dadosTurma"></tbody>
+            </table>
+        </div>
+
+        <form id="formLocal" novalidate>
+            <fieldset>
+                <legend>Novo local e horário</legend>
+                <div class="grade">
+                    <div class="campo">
+                        <label for="local">Local *</label>
+                        <select id="local" required></select>
+                        <span class="erro-campo">Selecione o local.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="horario">Horário disponível *</label>
+                        <select id="horario" required disabled>
+                            <option value="">Escolha o local primeiro</option>
+                        </select>
+                        <span class="erro-campo">Selecione um horário disponível.</span>
+                    </div>
+                </div>
+                <p id="avisoLocal" class="dica oculto"></p>
+            </fieldset>
+            <div class="acoes">
+                <button type="submit" id="btnAtribuir" class="btn primario">Atribuir local</button>
+                <button type="button" id="btnFechar" class="btn">Fechar</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<div id="modalErro" class="modal oculto" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <div class="modal-caixa">
+        <h3 id="modalTitulo">Falha de conexão</h3>
+        <p>Não foi possível falar com o servidor. Verifique se a aplicação está rodando.</p>
+        <button type="button" class="btn primario" id="btnFecharModal">Fechar</button>
+    </div>
+</div>
+
+<footer>
+    <p>CateSys — Engenharia de Software II — Grupo 4</p>
+</footer>
+
+<script src="atribuir-local.js"></script>
+</body>
+</html>

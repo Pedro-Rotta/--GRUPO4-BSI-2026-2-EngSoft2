@@ -80,8 +80,6 @@ public class CatequizandoDAO implements IDAO<Catequizando> {
         return lista;
     }
 
-    // Consulta com 2 filtros (nome do catequizando e nome do responsável).
-    // Filtro vazio ou nulo não restringe; a busca é por trecho e ignora maiúsculas/minúsculas.
     public List<Catequizando> buscar(String filtroNome, String filtroResponsavel) throws SQLException {
         String sql = """
                 SELECT * FROM catequizando
@@ -100,8 +98,6 @@ public class CatequizandoDAO implements IDAO<Catequizando> {
         return lista;
     }
 
-    // Usado pela Control para impedir a exclusão de quem tem matrícula
-    // (no banco, matricula -> catequizando é ON DELETE CASCADE).
     public boolean possuiMatricula(int id) throws SQLException {
         String sql = "SELECT 1 FROM matricula WHERE catequizando_id = ? LIMIT 1";
         try (PreparedStatement ps = conexao.getConnection().prepareStatement(sql)) {
@@ -112,7 +108,6 @@ public class CatequizandoDAO implements IDAO<Catequizando> {
         }
     }
 
-    // Preenche os parâmetros 1 a 14, na mesma ordem usada no INSERT e no UPDATE.
     private void preencherCampos(PreparedStatement ps, Catequizando c) throws SQLException {
         ps.setString(1, c.getNome());
         definirData(ps, 2, c.getDataNascimento());
@@ -157,7 +152,7 @@ public class CatequizandoDAO implements IDAO<Catequizando> {
         try {
             return Sexo.valueOf(valor.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            return null; // valor antigo fora do enum: não quebra a leitura
+            return null;
         }
     }
 

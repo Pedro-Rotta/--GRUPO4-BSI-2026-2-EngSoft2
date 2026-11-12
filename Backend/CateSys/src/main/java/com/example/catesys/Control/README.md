@@ -11,8 +11,9 @@ Pacote: `com.example.catesys.Control`
 ```
 1. recebe o request do front (record XxxRequest)
 2. instancia a Model e chama model.validar()  → se houver erros, devolve 400
-3. pega a Conexao e instancia o DAO (passando a Conexao no construtor)
-4. executa a operação passando a Model para o DAO: dao.gravar(model)
+3. pega a Conexao (Singleton)
+4. chama a Model passando a Conexao: model.gravar(conexao)
+   (a Model instancia o DAO e chama dao.gravar(this))
 5. commit (ou rollback em caso de erro)
 6. devolve a response (record XxxResponse)
 ```
@@ -20,9 +21,10 @@ Pacote: `com.example.catesys.Control`
 ## Como codificar
 - É um `@RestController` com `@RequestMapping("/api/<entidade-no-plural>")`.
 - Executa **todos os passos do caso de uso** (GRASP Controlador).
-- Funciona como **Façade**: o front chama um único endpoint e a Control coordena Model, DAO e Conexao por dentro.
-- **Instancia a Model e o DAO** (GRASP Criador: é ela que tem os dados do request).
-- Declara o DAO pela interface: `IDAO<Catequizando> dao = new CatequizandoDAO(conexao);` (SOLID-D).
+- Funciona como **Façade**: o front chama um único endpoint e a Control coordena Model e Conexao por dentro.
+- **Instancia a Model** (GRASP Criador: é ela que tem os dados do request). **Não instancia o DAO**:
+  quem faz isso é a Model (View → Control → Model → DAO).
+- Para consultas, instancia uma Model vazia: `new Catequizando().buscar(nome, responsavel, conexao)`.
 - Contém os **ifs de regra de negócio** que dependem do banco
   (ex.: "só matricula se a turma tiver vaga", "não exclui catequizando com matrícula").
 - **Controla a transação**: `commit` no sucesso, `rollback` no erro.
@@ -61,9 +63,8 @@ public synchronized ResponseEntity<?> cadastrar(@RequestBody CatequizandoRequest
         return ResponseEntity.badRequest().body(Map.of("erros", erros));
 
     Conexao conexao = Conexao.getInstancia();
-    IDAO<Catequizando> dao = new CatequizandoDAO(conexao);               // instancia o DAO
     try {
-        dao.gravar(catequizando);                                        // DAO recebe a Model
+        catequizando.gravar(conexao);                                    // a Model instancia o DAO
         conexao.commit();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("mensagem", "Catequizando cadastrado com sucesso"));
@@ -76,5 +77,6 @@ public synchronized ResponseEntity<?> cadastrar(@RequestBody CatequizandoRequest
 
 ## O que NÃO fazer
 - Não escrever SQL aqui (o SQL fica no `DAO`).
+- Não instanciar nem chamar DAO (é a `Model` que faz isso).
 - Não validar atributos aqui (a validação fica na `Model`, no `validar()`).
 - Não deixar a transação aberta: toda escrita termina em `commit` ou `rollback`.

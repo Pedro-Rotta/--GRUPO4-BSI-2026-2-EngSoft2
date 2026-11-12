@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CateSys - Ofertar Turma</title>
+    <link rel="stylesheet" href="catequizandos.css">
+</head>
+<body>
+
+<header>
+    <h1>CateSys</h1>
+    <p>Paróquia São Francisco Xavier — Ofertar Turma</p>
+</header>
+
+<main>
+    <div id="notificacao" class="notificacao oculto" role="status" aria-live="polite"></div>
+
+    <section class="painel">
+        <h2>Ofertar Turma</h2>
+        <p class="dica">Escolha etapa, catequista, período, local e horário. O sistema confere se o local e o
+            catequista estão livres nesse dia e horário durante o período.
+            <a href="atribuir-local.html">Atribuir local a uma turma existente</a></p>
+
+        <form id="formTurma" novalidate>
+            <fieldset>
+                <legend>Turma</legend>
+                <div class="grade">
+                    <div class="campo">
+                        <label for="etapa">Etapa *</label>
+                        <select id="etapa" required></select>
+                        <span class="erro-campo">Selecione a etapa.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="catequista">Catequista *</label>
+                        <select id="catequista" required></select>
+                        <span class="erro-campo">Selecione o catequista.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="dataInicio">Início do período *</label>
+                        <input id="dataInicio" type="date" required>
+                        <span class="erro-campo">Informe a data de início.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="dataFim">Término do período *</label>
+                        <input id="dataFim" type="date" required>
+                        <span class="erro-campo">Informe uma data posterior ao início.</span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Local e horário</legend>
+                <div class="grade">
+                    <div class="campo">
+                        <label for="local">Local *</label>
+                        <select id="local" required></select>
+                        <span class="erro-campo">Selecione o local.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="horario">Horário *</label>
+                        <select id="horario" required disabled>
+                            <option value="">Escolha o local e o período primeiro</option>
+                        </select>
+                        <span class="erro-campo">Selecione um horário disponível.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="vagas">Limite de vagas *</label>
+                        <input id="vagas" type="number" min="1" step="1" required>
+                        <span class="erro-campo" id="erroVagas">Informe um número de vagas válido.</span>
+                    </div>
+                </div>
+                <p id="avisoHorario" class="dica oculto"></p>
+                <p id="avisoCapacidade" class="dica oculto"></p>
+            </fieldset>
+
+            <div class="acoes">
+                <button type="submit" id="btnOfertar" class="btn primario">Ofertar turma</button>
+                <button type="button" id="btnLimpar" class="btn">Limpar</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Passo 6: resumo da turma criada -->
+    <section id="resumo" class="painel oculto">
+        <h2>Turma ofertada</h2>
+        <div class="tabela-container">
+            <table>
+                <tbody id="resumoCorpo"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<div id="modalErro" class="modal oculto" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <div class="modal-caixa">
+        <h3 id="modalTitulo">Falha de conexão</h3>
+        <p>Não foi possível falar com o servidor. Verifique se a aplicação está rodando.</p>
+        <button type="button" class="btn primario" id="btnFecharModal">Fechar</button>
+    </div>
+</div>
+
+<footer>
+    <p>CateSys — Engenharia de Software II — Grupo 4</p>
+</footer>
+
+<script src="ofertar-turma.js"></script>
+</body>
+</html>

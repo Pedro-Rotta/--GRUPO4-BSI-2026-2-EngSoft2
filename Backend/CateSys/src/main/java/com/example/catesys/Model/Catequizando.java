@@ -1,7 +1,13 @@
 package com.example.catesys.Model;
 
+import com.example.catesys.Control.Conexao;
+import com.example.catesys.DAO.CatequizandoDAO;
+import com.example.catesys.DAO.IDAO;
 import com.example.catesys.Model.Enums.Sexo;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +40,10 @@ public class Catequizando {
     public Catequizando() {
     }
 
+    public Catequizando(int id) {
+        this.id = id;
+    }
+
     public static Catequizando reconstituir(
             int id,
             String nome,
@@ -58,19 +68,60 @@ public class Catequizando {
     private static final String REGEX_EMAIL = "^[\\w.+-]+@[\\w-]+\\.[\\w.]+$";
     private static final String REGEX_CEP = "\\d{5}-\\d{3}";
     private static final String REGEX_UF = "[A-Z]{2}";
+    public static final int IDADE_SEM_RESPONSAVEL = 18;
+
+    // Idade em anos completos na data de hoje (-1 se não houver data de nascimento).
+    public int calcularIdade() {
+        if (dataNascimento == null)
+            return -1;
+        LocalDate nascimento = new java.sql.Date(dataNascimento.getTime()).toLocalDate();
+        return Period.between(nascimento, LocalDate.now()).getYears();
+    }
+
+    public boolean maiorDeIdade() {
+        return calcularIdade() >= IDADE_SEM_RESPONSAVEL;
+    }
+
+    private static final Date DATA_MINIMA = java.sql.Date.valueOf("1926-01-01");
+
+    private static boolean contemNumero(String valor) {
+        return valor.chars().anyMatch(Character::isDigit);
+    }
+
+    // Pelo menos duas palavras separadas por espaço (nome + sobrenome).
+    private static boolean temSobrenome(String valor) {
+        return valor.trim().split("\\s+").length >= 2;
+    }
 
     public List<String> validar() {
         List<String> erros = new ArrayList<>();
 
         if (vazio(nome))
             erros.add("Nome é obrigatório");
+        else if (contemNumero(nome))
+            erros.add("Nome não pode conter números");
+        else if (!temSobrenome(nome))
+            erros.add("Informe nome e sobrenome");
         if (dataNascimento == null)
             erros.add("Data de nascimento é obrigatória");
         else if (dataNascimento.after(new Date()))
             erros.add("Data de nascimento não pode ser futura");
-        if (vazio(nomeResponsavel))
-            erros.add("Nome do responsável é obrigatório");
-        if (telefoneResponsavel == null || !telefoneResponsavel.matches(REGEX_TELEFONE))
+        else if (dataNascimento.before(DATA_MINIMA))
+            erros.add("Data de nascimento deve ser a partir de 01/01/1926");
+
+        // Responsável só é obrigatório para menor de idade.
+        boolean exigeResponsavel = !maiorDeIdade();
+        if (vazio(nomeResponsavel)) {
+            if (exigeResponsavel)
+                erros.add("Nome do responsável é obrigatório para menores de " + IDADE_SEM_RESPONSAVEL + " anos");
+        } else if (contemNumero(nomeResponsavel))
+            erros.add("Nome do responsável não pode conter números");
+        else if (!temSobrenome(nomeResponsavel))
+            erros.add("Informe nome e sobrenome do responsável");
+        if (vazio(telefoneResponsavel)) {
+            if (exigeResponsavel)
+                erros.add("Telefone do responsável é obrigatório para menores de " + IDADE_SEM_RESPONSAVEL + " anos");
+        } else if (!telefoneResponsavel.matches(REGEX_TELEFONE))
             erros.add("Telefone do responsável inválido (formato: (99) 99999-9999)");
 
         if (!vazio(telefone) && !telefone.matches(REGEX_TELEFONE))
@@ -94,6 +145,41 @@ public class Catequizando {
         tamanhoMaximo(erros, "E-mail do responsável", emailResponsavel, 45);
 
         return erros;
+    }
+
+    // Persistência: a Model instancia o DAO e se passa como parâmetro (Control → Model → DAO).
+    // A Conexao vem da Control, que é quem faz commit/rollback.
+
+    public boolean gravar(Conexao conexao) throws SQLException {
+        IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
+        return dao.gravar(this);
+    }
+
+    public boolean alterar(Conexao conexao) throws SQLException {
+        IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
+        return dao.alterar(this);
+    }
+
+    public boolean excluir(Conexao conexao) throws SQLException {
+        IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
+        return dao.excluir(id);
+    }
+
+    public Catequizando buscarPorId(int id, Conexao conexao) throws SQLException {
+        IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
+        return dao.buscarPorId(id);
+    }
+
+    public List<Catequizando> buscar(String filtroNome, String filtroResponsavel, Conexao conexao) throws SQLException {
+        CatequizandoDAO dao = new CatequizandoDAO(conexao); // buscar(nome, responsavel) é só deste DAO
+        if (vazio(filtroNome) && vazio(filtroResponsavel))
+            return dao.buscarTodos();
+        return dao.buscar(filtroNome, filtroResponsavel);
+    }
+
+    public boolean possuiMatricula(Conexao conexao) throws SQLException {
+        CatequizandoDAO dao = new CatequizandoDAO(conexao);
+        return dao.possuiMatricula(id);
     }
 
     private static boolean vazio(String valor) {

@@ -1,7 +1,5 @@
 package com.example.catesys.Control;
 
-import com.example.catesys.DAO.CatequizandoDAO;
-import com.example.catesys.DAO.IDAO;
 import com.example.catesys.Model.Catequizando;
 import com.example.catesys.Model.Enums.Sexo;
 import org.springframework.http.HttpStatus;
@@ -41,9 +39,8 @@ public class GerenciarCatequizandoControl {
             return ResponseEntity.badRequest().body(Map.of("erros", erros));
 
         Conexao conexao = Conexao.getInstancia();
-        IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
         try {
-            dao.gravar(catequizando);
+            catequizando.gravar(conexao);                // a Model instancia o DAO
             conexao.commit();
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("mensagem", "Catequizando cadastrado com sucesso"));
         } catch (SQLException | RuntimeException e) {
@@ -63,9 +60,8 @@ public class GerenciarCatequizandoControl {
             return ResponseEntity.badRequest().body(Map.of("erros", erros));
 
         Conexao conexao = Conexao.getInstancia();
-        IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
         try {
-            if (!dao.alterar(catequizando)) {
+            if (!catequizando.alterar(conexao)) {
                 conexao.rollback();
                 return naoEncontrado();
             }
@@ -79,15 +75,15 @@ public class GerenciarCatequizandoControl {
 
     @DeleteMapping("/{id}")
     public synchronized ResponseEntity<?> excluir(@PathVariable int id) throws SQLException {
+        Catequizando catequizando = new Catequizando(id);
         Conexao conexao = Conexao.getInstancia();
-        CatequizandoDAO dao = new CatequizandoDAO(conexao);
         try {
-            if (dao.possuiMatricula(id)) {
+            if (catequizando.possuiMatricula(conexao)) {
                 conexao.rollback();
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("erros",
                         List.of("Catequizando possui matrícula e não pode ser excluído")));
             }
-            if (!dao.excluir(id)) {
+            if (!catequizando.excluir(conexao)) {
                 conexao.rollback();
                 return naoEncontrado();
             }
@@ -102,9 +98,8 @@ public class GerenciarCatequizandoControl {
     @GetMapping("/{id}")
     public synchronized ResponseEntity<?> buscarPorId(@PathVariable int id) throws SQLException {
         Conexao conexao = Conexao.getInstancia();
-        IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
         try {
-            Catequizando catequizando = dao.buscarPorId(id);
+            Catequizando catequizando = new Catequizando().buscarPorId(id, conexao);
             if (catequizando == null)
                 return naoEncontrado();
             return ResponseEntity.ok(converter(catequizando));
@@ -117,10 +112,8 @@ public class GerenciarCatequizandoControl {
     public synchronized List<CatequizandoResponse> buscar(@RequestParam(required = false) String nome,
                                                           @RequestParam(required = false) String responsavel) throws SQLException {
         Conexao conexao = Conexao.getInstancia();
-        CatequizandoDAO dao = new CatequizandoDAO(conexao); // tipo concreto: usa buscar(nome, responsavel), que é só deste DAO
         try {
-            boolean semFiltro = vazio(nome) && vazio(responsavel);
-            List<Catequizando> lista = semFiltro ? dao.buscarTodos() : dao.buscar(nome, responsavel);
+            List<Catequizando> lista = new Catequizando().buscar(nome, responsavel, conexao);
             return lista.stream().map(this::converter).toList();
         } finally {
             conexao.rollback();

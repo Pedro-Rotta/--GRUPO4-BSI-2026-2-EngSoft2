@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CateSys - Gerenciar Catequizandos</title>
+    <link rel="stylesheet" href="catequizandos.css">
+</head>
+<body>
+
+<header>
+    <h1>CateSys</h1>
+    <p>Paróquia São Francisco Xavier — Gerenciar Catequizandos</p>
+</header>
+
+<main>
+    <!-- Área de notificação (sem alert) -->
+    <div id="notificacao" class="notificacao oculto" role="status" aria-live="polite"></div>
+
+    <!-- Cadastro / alteração -->
+    <section class="painel">
+        <h2 id="tituloFormulario">Cadastrar Catequizando</h2>
+
+        <form id="formCatequizando" novalidate>
+            <input type="hidden" id="id">
+
+            <fieldset>
+                <legend>Catequizando</legend>
+                <div class="grade">
+                    <div class="campo largo">
+                        <label for="nome">Nome *</label>
+                        <input id="nome" maxlength="100" data-nome-completo required
+                               pattern="\s*[^\d\s]+(\s+[^\d\s]+)+\s*" placeholder="Nome e sobrenome">
+                        <span class="erro-campo">Informe nome e sobrenome, sem números.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="dataNascimento">Data de nascimento *</label>
+                        <input id="dataNascimento" type="date" min="1926-01-01" required>
+                        <span class="erro-campo">Informe uma data válida, de 01/01/1926 até hoje.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="sexo">Sexo</label>
+                        <select id="sexo">
+                            <option value="">—</option>
+                            <option value="MASCULINO">Masculino</option>
+                            <option value="FEMININO">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="documento">Documento</label>
+                        <input id="documento" maxlength="20">
+                    </div>
+                    <div class="campo">
+                        <label for="telefone">Telefone</label>
+                        <input id="telefone" data-mascara="telefone" placeholder="(99) 99999-9999"
+                               pattern="\(\d{2}\) \d{4,5}-\d{4}">
+                        <span class="erro-campo">Formato: (99) 99999-9999.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="email">E-mail</label>
+                        <input id="email" type="email" maxlength="45">
+                        <span class="erro-campo">E-mail inválido.</span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Responsável</legend>
+                <p id="avisoResponsavel" class="dica oculto">
+                    Catequizando com 18 anos ou mais: os dados do responsável são opcionais.
+                </p>
+                <div class="grade">
+                    <div class="campo largo">
+                        <label for="nomeResponsavel">Nome do responsável<span class="obrigatorio-resp"> *</span></label>
+                        <input id="nomeResponsavel" maxlength="100" data-nome-completo required
+                               pattern="\s*[^\d\s]+(\s+[^\d\s]+)+\s*" placeholder="Nome e sobrenome">
+                        <span class="erro-campo">Informe nome e sobrenome do responsável, sem números.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="telefoneResponsavel">Telefone do responsável<span class="obrigatorio-resp"> *</span></label>
+                        <input id="telefoneResponsavel" data-mascara="telefone" placeholder="(99) 99999-9999"
+                               pattern="\(\d{2}\) \d{4,5}-\d{4}" required>
+                        <span class="erro-campo">Formato: (99) 99999-9999.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="emailResponsavel">E-mail do responsável</label>
+                        <input id="emailResponsavel" type="email" maxlength="45">
+                        <span class="erro-campo">E-mail inválido.</span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Endereço</legend>
+                <div class="grade">
+                    <div class="campo largo">
+                        <label for="endereco">Endereço</label>
+                        <input id="endereco" maxlength="45">
+                    </div>
+                    <div class="campo">
+                        <label for="bairro">Bairro</label>
+                        <input id="bairro" maxlength="45">
+                    </div>
+                    <div class="campo">
+                        <label for="cidade">Cidade</label>
+                        <input id="cidade" maxlength="45">
+                    </div>
+                    <div class="campo estreito">
+                        <label for="uf">UF</label>
+                        <input id="uf" maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP">
+                        <span class="erro-campo">Sigla com 2 letras.</span>
+                    </div>
+                    <div class="campo">
+                        <label for="cep">CEP</label>
+                        <input id="cep" data-mascara="cep" placeholder="99999-999" pattern="\d{5}-\d{3}">
+                        <span class="erro-campo">Formato: 99999-999.</span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="acoes">
+                <button type="submit" id="btnSalvar" class="btn primario">Cadastrar</button>
+                <button type="button" id="btnCancelar" class="btn">Limpar</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Consulta: 2 filtros, nenhum por código -->
+    <section class="painel">
+        <h2>Consultar Catequizandos</h2>
+        <form id="formFiltro" class="filtros">
+            <div class="campo">
+                <label for="filtroNome">Nome do catequizando</label>
+                <input id="filtroNome" placeholder="Trecho do nome">
+            </div>
+            <div class="campo">
+                <label for="filtroResponsavel">Nome do responsável</label>
+                <input id="filtroResponsavel" placeholder="Trecho do nome">
+            </div>
+            <button type="submit" class="btn primario">Buscar</button>
+        </form>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Nascimento</th>
+                    <th>Responsável</th>
+                    <th>Telefone resp.</th>
+                    <th>Cidade/UF</th>
+                    <th class="col-acoes">Ações</th>
+                </tr>
+                </thead>
+                <tbody id="tabelaCorpo">
+                <tr><td colspan="6" class="vazio">Faça uma busca.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<!-- Modal só para erro fatal de conexão -->
+<div id="modalErro" class="modal oculto" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <div class="modal-caixa">
+        <h3 id="modalTitulo">Falha de conexão</h3>
+        <p>Não foi possível falar com o servidor. Verifique se a aplicação está rodando.</p>
+        <button type="button" class="btn primario" id="btnFecharModal">Fechar</button>
+    </div>
+</div>
+
+<footer>
+    <p>CateSys — Engenharia de Software II — Grupo 4</p>
+</footer>
+
+<script src="catequizandos.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+:root {
+    --cor-primaria: #6b3f1d;
+    --cor-primaria-escura: #4f2c12;
+    --cor-fundo: #f5f1ea;
+    --cor-painel: #ffffff;
+    --cor-borda: #d9cfc1;
+    --cor-texto: #2b2420;
+    --cor-suave: #6f6560;
+    --cor-erro: #b3261e;
+    --cor-erro-fundo: #fdecea;
+    --cor-sucesso: #1e6b34;
+    --cor-sucesso-fundo: #e7f5ea;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--cor-fundo);
+    color: var(--cor-texto);
+}
+
+header {
+    background: var(--cor-primaria);
+    color: #fff;
+    padding: 16px 24px;
+}
+header h1 { margin: 0; font-size: 1.5rem; }
+header p { margin: 4px 0 0; opacity: .85; }
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+footer {
+    text-align: center;
+    color: var(--cor-suave);
+    font-size: .85rem;
+    padding: 16px;
+}
+
+.painel {
+    background: var(--cor-painel);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+.painel h2 { margin-top: 0; color: var(--cor-primaria); }
+
+fieldset {
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    margin: 0 0 16px;
+    padding: 12px 16px;
+}
+legend { font-weight: 600; padding: 0 6px; }
+.dica { margin: 0 0 10px; color: var(--cor-suave); font-size: .9rem; }
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px 16px;
+}
+.campo { display: flex; flex-direction: column; }
+.campo.largo { grid-column: span 2; }
+.campo label { font-size: .9rem; margin-bottom: 4px; }
+
+input, select {
+    font: inherit;
+    padding: 8px 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+    background: #fff;
+}
+input:focus, select:focus {
+    outline: 2px solid var(--cor-primaria);
+    outline-offset: 0;
+}
+
+/* Validação no estilo Bootstrap: só destaca depois da tentativa de envio */
+.erro-campo { display: none; color: var(--cor-erro); font-size: .8rem; margin-top: 3px; }
+form.validado input:invalid, form.validado select:invalid { border-color: var(--cor-erro); background: var(--cor-erro-fundo); }
+form.validado input:invalid ~ .erro-campo,
+form.validado select:invalid ~ .erro-campo { display: block; }
+
+.acoes, .filtros { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+.filtros .campo { flex: 1 1 220px; }
+
+.btn {
+    font: inherit;
+    padding: 8px 16px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+.btn:hover { background: #f0ebe4; }
+.btn.primario { background: var(--cor-primaria); border-color: var(--cor-primaria); color: #fff; }
+.btn.primario:hover { background: var(--cor-primaria-escura); }
+.btn.perigo { background: var(--cor-erro); border-color: var(--cor-erro); color: #fff; }
+.btn.pequeno { padding: 4px 10px; font-size: .85rem; }
+.btn:disabled { opacity: .6; cursor: wait; }
+
+.notificacao {
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1px solid;
+}
+.notificacao.sucesso { background: var(--cor-sucesso-fundo); color: var(--cor-sucesso); border-color: var(--cor-sucesso); }
+.notificacao.erro { background: var(--cor-erro-fundo); color: var(--cor-erro); border-color: var(--cor-erro); }
+.notificacao ul { margin: 4px 0 0; padding-left: 20px; }
+
+.tabela-container { overflow-x: auto; margin-top: 16px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--cor-borda); }
+th { background: #efe7dc; font-size: .9rem; }
+td.vazio { text-align: center; color: var(--cor-suave); }
+.col-acoes { width: 1%; white-space: nowrap; }
+td.col-acoes { display: flex; gap: 6px; }
+.confirmar { color: var(--cor-erro); font-size: .85rem; align-self: center; }
+
+.modal {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, .45);
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+}
+.modal-caixa { background: #fff; border-radius: 8px; padding: 20px 24px; max-width: 420px; }
+.modal-caixa h3 { margin-top: 0; color: var(--cor-erro); }
+
+.oculto { display: none !important; }
+
+@media (max-width: 600px) {
+    .campo.largo { grid-column: auto; }
+}

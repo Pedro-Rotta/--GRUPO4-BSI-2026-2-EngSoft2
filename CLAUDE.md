@@ -27,31 +27,35 @@ Documentos de referência na raiz: `TrabEngGrupo4formatadoFinal (1).pdf` (Manual
 
 Usar **MVC** (View, Control, Model), os **5 padrões GRASP**, princípios **SOLID** e os **GOF Singleton e Façade**.
 
-## Arquitetura: MVC + DAO (modelo A)
+## Arquitetura: MVC + DAO (View → Control → Model → DAO)
 
 Pacote base: `com.example.catesys`.
 
 | Pacote    | Responsabilidade                                                                  |
 |-----------|-----------------------------------------------------------------------------------|
 | View      | Front em `resources/static` (HTML/CSS/JS). Chama a API e mostra o resultado.      |
-| `Control` | Um controlador por caso de uso (`@RestController`) + a classe `Conexao` Singleton. |
-| `Model`   | Entidades (uma por tabela): dados, `validar()` e cálculos próprios.               |
+| `Control` | Um controlador por caso de uso (`@RestController`) + a classe `Conexao` Singleton. Instancia a Model. |
+| `Model`   | Entidades (uma por tabela): dados, `validar()`, cálculos próprios. Instancia o DAO. |
 | `DAO`     | Todo o SQL. Um DAO por entidade, implementando `IDAO<T>`.                         |
 
-### Fluxo obrigatório (modelo A)
+### Fluxo obrigatório (exigido pela professora)
 
 ```
-View ──request──▶ Control
-                   1. recebe o request (record XxxRequest)
-                   2. instancia a Model  → model.validar()  → se houver erros: 400
-                   3. pega a Conexao e instancia o DAO (Conexao no construtor)
-                   4. executa: dao.gravar(model) / dao.alterar(model) / dao.buscar...(...)
-                   5. commit (ou rollback em erro)
-                   6. retorna a response (record XxxResponse)
+View ──(requisita)──▶ Control ──(instancia)──▶ Model ──(instancia)──▶ DAO
+
+Control
+  1. recebe o request (record XxxRequest)
+  2. instancia a Model  → model.validar()  → se houver erros: 400
+  3. pega a Conexao (Singleton)
+  4. chama a Model: model.gravar(conexao) / model.alterar(conexao) / model.buscar...(..., conexao)
+       Model → instancia o DAO (new XxxDAO(conexao)) e chama dao.gravar(this)
+  5. commit (ou rollback em erro)
+  6. retorna a response (record XxxResponse)
 ```
 
-- **A Control instancia a Model e o DAO.**
-- **O DAO recebe a Model como parâmetro.** A Model **não conhece** o DAO.
+- **A Control instancia a Model** e **nunca** o DAO (não importa o pacote `DAO`).
+- **A Model instancia o DAO** e se passa como parâmetro (`dao.gravar(this)`).
+- A `Conexao` é obtida pela Control e repassada à Model, para a transação ficar na Control.
 - A View nunca acessa Model, DAO ou Conexao.
 
 ## Regras por camada
@@ -65,10 +69,12 @@ FAZ:
 - `if`s de regra de negócio que dependem do banco (ex.: CPF duplicado, turma sem vaga, não excluir com matrícula ativa).
 - Controla a transação: `commit` no sucesso, `rollback` no erro; nas leituras, `rollback` no `finally` para encerrar a transação.
 - Métodos `synchronized`, porque todas as requisições compartilham a mesma `Conexao`.
-- Declarar o DAO pela interface: `IDAO<Catequizando> dao = new CatequizandoDAO(conexao);` (SOLID-D).
+- Chama os métodos de persistência da Model passando a `Conexao`: `catequizando.gravar(conexao)`.
+- Para consultas, instancia uma Model vazia: `new Catequizando().buscar(nome, responsavel, conexao)`.
 
 NÃO FAZ:
 - SQL.
+- Instanciar ou chamar DAO.
 - Validação de atributos (é da Model).
 
 ### Model (`com.example.catesys.Model`)
@@ -77,17 +83,20 @@ FAZ:
 - `public List<String> validar()` que devolve **todos** os erros (lista vazia = válido). GRASP Especialista.
 - Cálculos sobre os próprios dados (ex.: vagas restantes em `Turma`).
 - `static Xxx reconstituir(int id, ...)` para montar objetos vindos do banco (com id).
+- Métodos de persistência que recebem a `Conexao` da Control, **instanciam o DAO** e se passam como parâmetro.
+  Declarar o DAO pela interface quando possível: `IDAO<Catequizando> dao = new CatequizandoDAO(conexao);` (SOLID-D);
+  buscas específicas (ex.: com filtros) usam o tipo concreto.
 
 NÃO FAZ:
-- SQL, conexão, transação.
-- Conhecer ou chamar DAO.
+- SQL.
+- `Conexao.getInstancia()`, `commit` ou `rollback` (a transação é da Control).
 - Lançar exceção em `set` para validar (o `set` no máximo normaliza: `trim()`, `toUpperCase()`).
 
 ### DAO (`com.example.catesys.DAO`)
 FAZ:
 - Implementa `IDAO<T>`; buscas com filtro específicas ficam só no DAO da entidade.
 - Recebe a `Conexao` no construtor e usa `conexao.getConnection().prepareStatement(sql)`.
-- Recebe a Model (ou o id) por parâmetro e devolve Models (usando `reconstituir`).
+- É instanciado pela Model; recebe a Model (ou o id) por parâmetro e devolve Models (usando `reconstituir`).
 - Usa sempre `PreparedStatement` com `?` (nunca concatenar valores no SQL).
 - Trata datas nulas com `ps.setNull(pos, Types.DATE)`.
 
@@ -131,6 +140,19 @@ public void rollback() throws SQLException { ... }
 ```
 `autoCommit` é `false`: toda escrita precisa de `commit()` explícito.
 
+### Método de persistência na Model
+```java
+public boolean gravar(Conexao conexao) throws SQLException {
+    IDAO<Catequizando> dao = new CatequizandoDAO(conexao);                  // a Model instancia o DAO
+    return dao.gravar(this);                                                // e se passa como parâmetro
+}
+
+public Catequizando buscarPorId(int id, Conexao conexao) throws SQLException {
+    IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
+    return dao.buscarPorId(id);
+}
+```
+
 ### Método de escrita na Control
 ```java
 @PostMapping
@@ -141,9 +163,8 @@ public synchronized ResponseEntity<?> cadastrar(@RequestBody CatequizandoRequest
         return ResponseEntity.badRequest().body(Map.of("erros", erros));
 
     Conexao conexao = Conexao.getInstancia();
-    IDAO<Catequizando> dao = new CatequizandoDAO(conexao);                  // instancia o DAO
     try {
-        dao.gravar(catequizando);                                           // DAO recebe a Model
+        catequizando.gravar(conexao);                                       // a Model instancia o DAO
         conexao.commit();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("mensagem", "Catequizando cadastrado com sucesso"));
@@ -159,9 +180,8 @@ public synchronized ResponseEntity<?> cadastrar(@RequestBody CatequizandoRequest
 @GetMapping("/{id}")
 public synchronized ResponseEntity<?> buscarPorId(@PathVariable int id) throws SQLException {
     Conexao conexao = Conexao.getInstancia();
-    IDAO<Catequizando> dao = new CatequizandoDAO(conexao);
     try {
-        Catequizando c = dao.buscarPorId(id);
+        Catequizando c = new Catequizando().buscarPorId(id, conexao);
         if (c == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("erros", List.of("Catequizando não encontrado")));
@@ -184,12 +204,12 @@ Datas trafegam como `"yyyy-MM-dd"` (`LocalDate` nos records).
 
 ## Mapa GRASP / SOLID / GOF (para conferir cada caso de uso)
 
-- **Especialista:** Model valida os próprios dados; DAO conhece o SQL.
-- **Criador:** a Control tem os dados do request, então cria a Model e o DAO.
+- **Especialista:** Model valida os próprios dados e sabe se persistir (via DAO); DAO conhece o SQL.
+- **Criador:** a Control tem os dados do request, então cria a Model; a Model usa o DAO, então cria o DAO.
 - **Controlador:** uma Control por caso de uso.
-- **Baixo Acoplamento:** Model não conhece DAO nem Conexao; View só conhece a API.
+- **Baixo Acoplamento:** Control não conhece DAO; Model depende de `IDAO<T>`; View só conhece a API.
 - **Alta Coesão:** cada classe com um papel só.
-- **SOLID:** S (uma responsabilidade por classe), O (novos DAOs sem alterar os existentes), L (DAOs substituíveis via `IDAO`, sem métodos vazios), I (interfaces só com o que a entidade usa), D (Control depende de `IDAO<T>`).
+- **SOLID:** S (uma responsabilidade por classe), O (novos DAOs sem alterar os existentes), L (DAOs substituíveis via `IDAO`, sem métodos vazios), I (interfaces só com o que a entidade usa), D (Model depende de `IDAO<T>`).
 - **Singleton:** `Conexao`. **Façade:** cada Control é o ponto único de entrada do caso de uso.
 
 ## Banco de dados (PostgreSQL no Neon, banco `CateSys`)

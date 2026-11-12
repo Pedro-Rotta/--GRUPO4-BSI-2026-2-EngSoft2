@@ -1,7 +1,10 @@
 # View (Visão)
 
-As telas do sistema são **web** e ficam em `src/main/resources/static` (HTML, CSS e JavaScript).
-Este pacote Java fica reservado; a View não tem classes Java.
+As telas do sistema são **web** (HTML, CSS e JavaScript) e ficam em `src/main/resources/static`,
+que é a pasta que o Spring Boot entrega ao navegador. A View não tem classes Java.
+Esta pasta `VIEW` guarda só esta documentação.
+
+Ex.: `static/VIEW/catequizandos.html` → `http://localhost:8080/VIEW/catequizandos.html`.
 
 ## O que fica na View
 - Formulários de cadastro e telas de consulta de cada caso de uso.
@@ -33,4 +36,15 @@ mostrarMensagem(resp.ok ? corpo.mensagem : corpo.erros.join('<br>'));
 - Não confiar só na validação da tela: ela é conveniência para o usuário; a `Model` valida de novo.
 - Não acessar banco, DAO ou Model diretamente: tudo passa pela API da `Control`.
 
-Fluxo: **View ⇄ Control → (Model, DAO)**. A Control instancia a Model e o DAO e passa a Model para o DAO.
+Fluxo: **View → (requisita) Control → (instancia) Model → (instancia) DAO**.
+A View só conhece a API; a Control instancia a Model, e a Model instancia o DAO.
+
+## Como rodar
+Precisa do **JDK 17**. Na pasta `Backend/CateSys`:
+
+```bash
+./gradlew bootRun
+```
+
+Depois abra no navegador, por exemplo `http://localhost:8080/VIEW/catequizandos.html`.
+Para parar, `Ctrl+C` no terminal.
