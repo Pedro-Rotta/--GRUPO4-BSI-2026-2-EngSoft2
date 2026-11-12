@@ -34,17 +34,17 @@ public class AuthController {
     public ResponseEntity login(@RequestBody LoginRequestDTO body) {
         try {
             Secretaria secretaria = this.secretariaDAO.buscarPorEmail(body.email());
-            if (passwordEncoder.matches(body.senha(), secretaria.getSenha())) {
+
+            if (secretaria != null && passwordEncoder.matches(body.senha(), secretaria.getSenha())) {
                 String token = this.tokenService.generateToken(secretaria);
                 return ResponseEntity.ok(new ResponseDTO(secretaria.getNome(), token));
             }
             else {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.status(401).build();
             }
         }
         catch(SQLException e) {
-            e.printStackTrace();
-            throw new UsernameNotFoundException("Usuario nao encontrado");
+            return ResponseEntity.status(500).build();
         }
     }
 

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CateSys | Sobre o CateSys</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- MENU LATERAL: repetido em todas as telas; só muda o link com class="active" -->
+    <aside class="sidebar" id="sidebar">
+      <a href="../dashboard.html" class="sidebar-brand">
+        <div class="icon-catesys">
+          <img class="bi bi-book-half" src="../imgs/2-removebg.png" alt="ícone do CateSys">
+        </div>
+        <span>Cate<span>Sys</span></span>
+      </a>
+      <div class="sidebar-user">
+        <div class="avatar">CS</div>
+        <div><strong>Secretaria</strong><small>Secretaria paroquial</small></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-caption">MENU PRINCIPAL</div>
+        <a href="../dashboard.html" class="nav-link"><i class="bi bi-grid-1x2"></i> Painel inicial</a>
+        <a href="catequizandos.html" class="nav-link"><i class="bi bi-people"></i> Catequizandos</a>
+        <a href="catequistas.html" class="nav-link"><i class="bi bi-person-badge"></i> Catequistas</a>
+        <a href="turmas.html" class="nav-link"><i class="bi bi-easel"></i> Turmas</a>
+        <a href="salas.html" class="nav-link"><i class="bi bi-building"></i> Salas e locais</a>
+        <a href="presenca.html" class="nav-link"><i class="bi bi-calendar-check"></i> Presença</a>
+        <a href="justificativas.html" class="nav-link"><i class="bi bi-file-earmark-text"></i> Justificativas</a>
+        <div class="nav-caption mt-4">CONSULTAS</div>
+        <a href="relatorios.html" class="nav-link"><i class="bi bi-file-bar-graph"></i> Relatórios</a>
+        <a href="sobre.html" class="nav-link active" aria-current="page"><i class="bi bi-info-circle"></i> Sobre o
+          CateSys</a>
+      </nav>
+      <div class="sidebar-footer"><span>Desenvolvido pelo Grupo 4</span><a href="../index.html" class="btn-logout"><i
+            class="bi bi-box-arrow-left"></i> Sair</a></div>
+    </aside>
+
+    <main class="main-area">
+      <!-- BARRA SUPERIOR -->
+      <header class="topbar">
+        <button class="btn-menu" id="menuToggle" aria-label="Abrir menu" aria-expanded="false"
+          aria-controls="sidebar"><i class="bi bi-list"></i></button>
+        <div class="breadcrumb-area"><span>CateSys</span><i class="bi bi-chevron-right"></i><strong>Sobre o
+            CateSys</strong></div>
+        <div class="d-flex align-items-center gap-3"><span class="today-date">qua., 11 de nov. de 2026</span>
+          <div class="top-avatar">CS</div>
+        </div>
+      </header>
+
+      <!-- CONTEÚDO DA TELA -->
+      <div class="page-content">
+        <div class="page-heading">
+          <div>
+            <h1>Sobre o CateSys</h1>
+            <p>Sistema de Gerenciamento Catequético.</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row align-items-center g-4">
+              <div class="col-md-3 text-center">
+                <div class="brand-symbol brand-symbol-sm">
+                  <img id="icon-sobre-catesys" src="../imgs/1-removebg.png" alt="ícone CateSys">
+                </div>
+              </div>
+              <div class="col-md-9">
+                <h2 class="h4 fw-bold text-navy">Organização e cuidado com a catequese.</h2>
+                <p class="text-muted">O CateSys foi idealizado para a Paróquia São Francisco Xavier, de Bastos/SP, com o
+                  objetivo de centralizar e organizar as informações da catequese, apoiar a secretaria paroquial e
+                  facilitar o acompanhamento dos catequizandos.</p>
+                <p class="text-muted mb-0">Projeto acadêmico desenvolvido pelo Grupo 4 — Engenharia de Software II.</p>
+                <div class="d-flex flex-wrap gap-2 mt-3"><span
+                    class="badge rounded-pill badge-neutral">HTML5</span><span
+                    class="badge rounded-pill badge-neutral">CSS3</span><span
+                    class="badge rounded-pill badge-neutral">Bootstrap 5</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body"><strong>Instituição</strong>
+                <p class="text-muted small mt-2 mb-0">Paróquia São Francisco Xavier<br>Bastos – SP</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body"><strong>Finalidade</strong>
+                <p class="text-muted small mt-2 mb-0">Gerenciamento de cadastros, turmas, matrículas e frequência.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body"><strong>Privacidade</strong>
+                <p class="text-muted small mt-2 mb-0">A aplicação deverá observar a LGPD e restringir o acesso aos dados
+                  pessoais.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="app-footer">CateSys · Paróquia São Francisco Xavier · Bastos/SP</footer>
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </main>
+  </div>
+  <script src="../js/config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/menu.js"></script>
+</body>
+
+</html>

@@ -5,7 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ca5de3f-db79-4025-89c9-81af19a9bf90" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/dashboard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/imgs/1-removebg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/imgs/1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/imgs/2-removebg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/imgs/2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/imgs/logo-login.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/js/auth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/js/config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/js/login.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/js/menu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/js/registro.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/catequistas.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/catequizandos.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/justificativas.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/presenca.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/relatorios.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/salas.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/sobre.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/pages/turmas.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/registro.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/CateSys/src/main/java/com/example/catesys/Control/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/CateSys/src/main/java/com/example/catesys/Control/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/CateSys/src/main/java/com/example/catesys/Cors/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/CateSys/src/main/java/com/example/catesys/Cors/CorsConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,23 +87,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build CateSys.executor": "Run",
-    "Gradle.CateSys [:com.example.catesys.TesteCatequista.main()].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.CateSysApplication.executor": "Run",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "feature/login",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/kachaves/Documentos/Unoeste/termo-V/eng-II/implementacao/--GRUPO4-BSI-2026-2-EngSoft2/Backend/CateSys/src/main/resources",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build CateSys.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.CateSys [:com.example.catesys.TesteCatequista.main()].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.CateSysApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/login&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/kachaves/Documentos/Unoeste/termo-V/eng-II/implementacao/--GRUPO4-BSI-2026-2-EngSoft2/Backend/CateSys/src/main/resources&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Backend/CateSys/src/main/resources" />
