@@ -1,7 +1,12 @@
 
 package com.example.catesys.Model;
 
+import com.example.catesys.DAO.CatequistaDAO;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 public class Catequista {
 
@@ -15,6 +20,9 @@ public class Catequista {
     private Date dataFim;
     private String senha;
 
+    public Catequista() {
+    }
+
     public Catequista(String nome, String cpf, String telefone,
                       String email, Secretaria secretaria) {
         this.nome = nome;
@@ -24,35 +32,62 @@ public class Catequista {
         this.secretaria = secretaria;
     }
 
-    public static Catequista reconstituir(
-            int id,
-            String nome,
-            String cpf,
-            String telefone,
-            String email,
-            Integer secretariaId,
-            Date dataInicio,
-            Date dataFim) {
+    // OPERACOES COM O DAO
 
-        Secretaria secretaria = null;
-
-        if (secretariaId != null) {
-            secretaria = Secretaria.reconstituir(secretariaId);
-        }
-
-        Catequista c = new Catequista(
-                nome, cpf, telefone, email, secretaria
-        );
-
-        c.id = id;
-        c.dataInicio = dataInicio;
-        c.dataFim = dataFim;
-
-        return c;
+    public boolean gravar(Connection conexao) throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.gravar(this);
     }
+
+    public boolean alterar(Connection conexao) throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.alterar(this);
+    }
+
+    public boolean excluir(Connection conexao, int id)
+            throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.excluir(id);
+    }
+
+    public Catequista buscarPorId(Connection conexao, int id)
+            throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.buscarPorId(id);
+    }
+
+    public List<Catequista> buscarTodos(Connection conexao)
+            throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.buscarTodos();
+    }
+
+    public List<Catequista> buscarPorNome(
+            Connection conexao, String nome) throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.buscarPorNome(nome);
+    }
+
+    public Catequista buscarPorCpf(
+            Connection conexao, String cpf) throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.buscarPorCpf(cpf);
+    }
+
+    public List<Catequista> buscarPorCpfParcial(
+            Connection conexao, String cpf) throws SQLException {
+        CatequistaDAO dao = new CatequistaDAO(conexao);
+        return dao.buscarPorCpfParcial(cpf);
+    }
+
+    // GETTERS E SETTERS
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -118,6 +153,8 @@ public class Catequista {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    // VALIDACAO DOS DADOS
 
     public void validarDados() {
 

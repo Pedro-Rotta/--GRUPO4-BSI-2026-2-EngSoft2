@@ -3,11 +3,17 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>CateSys - Consultar Catequistas</title>
+
     <link rel="stylesheet" href="/catequistas.css">
+
     <script src="/catequistas.js" defer></script>
 </head>
+
 <body data-pagina="consulta">
 
 <header>
@@ -16,6 +22,7 @@
 </header>
 
 <main>
+
     <nav class="navegacao">
         <a href="/catequistas.html">Início</a>
         <span>/</span>
@@ -23,12 +30,18 @@
     </nav>
 
     <section class="painel">
+
         <h2>Consultar Catequistas</h2>
-        <p>Pesquise, edite ou exclua catequistas cadastrados.</p>
+
+        <p>
+            Pesquise, edite ou exclua catequistas cadastrados.
+        </p>
 
         <div class="pesquisa">
+
             <div class="campo">
                 <label for="tipoBusca">Pesquisar por</label>
+
                 <select id="tipoBusca">
                     <option value="nome">Nome</option>
                     <option value="cpf">CPF</option>
@@ -37,8 +50,12 @@
 
             <div class="campo">
                 <label for="valorBusca">Pesquisa</label>
-                <input type="text" id="valorBusca"
-                       placeholder="Digite o nome">
+
+                <input
+                        type="text"
+                        id="valorBusca"
+                        placeholder="Digite o nome"
+                >
             </div>
 
             <button type="button" id="btnPesquisar">
@@ -48,45 +65,62 @@
             <button type="button" id="btnListar">
                 Listar todos
             </button>
+
         </div>
 
-        <p id="mensagem" role="status" aria-live="polite"></p>
+        <p id="mensagem"
+           role="status"
+           aria-live="polite">
+        </p>
 
         <div class="tabela-container">
+
             <table>
+
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>CPF</th>
-                        <th>Telefone</th>
-                        <th>E-mail</th>
-                        <th>Data início</th>
-                        <th>Data término</th>
-                        <th>Ações</th>
-                    </tr>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Data início</th>
+                    <th>Data término</th>
+                    <th>Ações</th>
+                </tr>
                 </thead>
 
                 <tbody id="tabelaCatequistas">
-                    <tr>
-                        <td colspan="8">Carregando...</td>
-                    </tr>
+                <tr>
+                    <td colspan="7">
+                        Carregando...
+                    </td>
+                </tr>
                 </tbody>
+
             </table>
+
         </div>
 
         <div class="botoes">
-            <a class="botao-link botao-primario"
-               href="/cadastrar-catequista.html">
+
+            <a
+                    class="botao-link botao-primario"
+                    href="/cadastrar-catequista.html"
+            >
                 Novo cadastro
             </a>
 
-            <a class="botao-link"
-               href="/catequistas.html">
+            <a
+                    class="botao-link"
+                    href="/catequistas.html"
+            >
                 Voltar
             </a>
+
         </div>
+
     </section>
+
 </main>
 
 <footer>

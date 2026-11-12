@@ -40,6 +40,8 @@ public class CatequistaRestController {
             LocalDate dataFim
     ) {}
 
+    // CONVERTER DADOS RECEBIDOS EM CATEQUISTA
+
     private Catequista montarCatequista(
             CatequistaRequest dados, Integer id) {
 
@@ -47,32 +49,20 @@ public class CatequistaRestController {
             throw new IllegalArgumentException("Dados obrigatorios");
         }
 
-        Catequista catequista;
+        Secretaria secretaria = dados.secretariaId() == null
+                ? null
+                : Secretaria.reconstituir(dados.secretariaId());
 
-        if (id == null) {
-            Secretaria secretaria = dados.secretariaId() == null
-                    ? null
-                    : Secretaria.reconstituir(dados.secretariaId());
+        Catequista catequista = new Catequista(
+                dados.nome(),
+                dados.cpf(),
+                dados.telefone(),
+                dados.email(),
+                secretaria
+        );
 
-            catequista = new Catequista(
-                    dados.nome(),
-                    dados.cpf(),
-                    dados.telefone(),
-                    dados.email(),
-                    secretaria
-            );
-
-        } else {
-            catequista = Catequista.reconstituir(
-                    id,
-                    dados.nome(),
-                    dados.cpf(),
-                    dados.telefone(),
-                    dados.email(),
-                    dados.secretariaId(),
-                    converterData(dados.dataInicio()),
-                    converterData(dados.dataFim())
-            );
+        if (id != null) {
+            catequista.setId(id);
         }
 
         catequista.setDataInicio(
@@ -98,7 +88,10 @@ public class CatequistaRestController {
         return new Date(data.getTime()).toLocalDate();
     }
 
+    // CONVERTER CATEQUISTA PARA RESPOSTA JSON
+
     private CatequistaResponse converterResposta(Catequista c) {
+
         return new CatequistaResponse(
                 c.getId(),
                 c.getNome(),
@@ -109,6 +102,8 @@ public class CatequistaRestController {
                 converterLocalDate(c.getDataFim())
         );
     }
+
+    // CADASTRAR
 
     @PostMapping
     public ResponseEntity<CatequistaResponse> cadastrar(
@@ -130,6 +125,8 @@ public class CatequistaRestController {
                 .body(converterResposta(salvo));
     }
 
+    // CONSULTAR TODOS
+
     @GetMapping
     public List<CatequistaResponse> buscarTodos()
             throws SQLException {
@@ -139,6 +136,8 @@ public class CatequistaRestController {
                 .map(this::converterResposta)
                 .toList();
     }
+
+    // CONSULTAR POR ID
 
     @GetMapping("/{id}")
     public ResponseEntity<CatequistaResponse> buscarPorId(
@@ -156,6 +155,8 @@ public class CatequistaRestController {
         );
     }
 
+    // CONSULTAR POR NOME
+
     @GetMapping("/nome")
     public List<CatequistaResponse> buscarPorNome(
             @RequestParam String nome)
@@ -167,21 +168,20 @@ public class CatequistaRestController {
                 .toList();
     }
 
+    // CONSULTAR POR CPF COMPLETO OU PARCIAL
+
     @GetMapping("/cpf")
-    public ResponseEntity<CatequistaResponse> buscarPorCpf(
+    public List<CatequistaResponse> buscarPorCpf(
             @RequestParam String cpf)
             throws SQLException {
 
-        Catequista catequista = control.buscarPorCpf(cpf);
-
-        if (catequista == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(
-                converterResposta(catequista)
-        );
+        return control.buscarPorCpfParcial(cpf)
+                .stream()
+                .map(this::converterResposta)
+                .toList();
     }
+
+    // ALTERAR
 
     @PutMapping("/{id}")
     public ResponseEntity<CatequistaResponse> alterar(
@@ -197,7 +197,9 @@ public class CatequistaRestController {
 
         Catequista catequista = montarCatequista(dados, id);
 
-        catequista.setSecretaria(original.getSecretaria());
+        catequista.setSecretaria(
+                original.getSecretaria()
+        );
 
         if (!control.alterar(catequista)) {
             return ResponseEntity.notFound().build();
@@ -209,6 +211,8 @@ public class CatequistaRestController {
                 converterResposta(atualizado)
         );
     }
+
+    // EXCLUIR
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
@@ -222,12 +226,17 @@ public class CatequistaRestController {
         return ResponseEntity.noContent().build();
     }
 
+    // ERROS DE VALIDACAO
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> erroValidacao(
             IllegalArgumentException e) {
 
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest()
+                .body(e.getMessage());
     }
+
+    // ERROS DO BANCO DE DADOS
 
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<String> erroBanco(SQLException e) {
