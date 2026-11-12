@@ -7,7 +7,6 @@ import com.example.catesys.DTO.ResponseDTO;
 import com.example.catesys.Model.Secretaria;
 import com.example.catesys.security.TokenService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -66,7 +64,6 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
         catch (SQLException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

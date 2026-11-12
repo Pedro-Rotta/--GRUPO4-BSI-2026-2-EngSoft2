@@ -11,6 +11,11 @@ public class Frequencia {
         this.turmaId = turmaId;
     }
 
+    public static Frequencia reconstituir(Date data, int turmaId) {
+        Frequencia s = new Frequencia (data, turmaId);
+        return s;
+    }
+
     public Date getData() {
         return data;
     }
