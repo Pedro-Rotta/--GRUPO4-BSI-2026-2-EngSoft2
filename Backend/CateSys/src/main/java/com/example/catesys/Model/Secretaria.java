@@ -22,10 +22,30 @@ public class Secretaria {
     public Secretaria() {
     }
 
-    public static Secretaria reconstituir(int id) {
-        Secretaria secretaria = new Secretaria();
-        secretaria.id = id;
-        return secretaria;
+    public static Secretaria reconstituir(
+            int id,
+            String nome,
+            String cpf,
+            String email,
+            String senha,
+            String telefone,
+            Date dataAdmissao,
+            Date dataDemissao) {
+
+        Secretaria s = new Secretaria(
+                nome, cpf, email, senha
+        );
+
+        s.id = id;
+        s.setTelefone(telefone);
+        s.setDataAdmissao(dataAdmissao);
+        s.setDataDemissao(dataDemissao);
+
+        return s;
+    }
+
+    public static Secretaria reconstituir(Integer integer) {
+        return new Secretaria();
     }
 
     public int getId() {

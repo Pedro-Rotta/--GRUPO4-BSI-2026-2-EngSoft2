@@ -15,8 +15,7 @@ public class Catequista {
     private Date dataFim;
     private String senha;
 
-    public Catequista(String nome, String cpf, String telefone,
-                      String email, Secretaria secretaria) {
+    public Catequista(String nome, String cpf, String telefone, String email, Secretaria secretaria) {
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;

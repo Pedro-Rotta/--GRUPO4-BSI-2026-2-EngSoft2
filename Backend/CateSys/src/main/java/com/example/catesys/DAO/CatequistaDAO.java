@@ -173,4 +173,22 @@ public class CatequistaDAO implements IDAO<Catequista> {
         return null;
     }
 
+    public Catequista buscarPorEmail(String email) throws SQLException {
+        String sql = "SELECT catequista_id, nome, cpf, telefone, email, " +
+                "secretaria_id, data_inicio, data_fim " +
+                "FROM catequista WHERE email = ?";
+
+        try (PreparedStatement ps = conexao.prepareStatement(sql)) {
+            ps.setString(1, email.trim());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return lerCatequista(rs);
+                }
+            }
+        }
+
+        return null;
+    }
+
 }

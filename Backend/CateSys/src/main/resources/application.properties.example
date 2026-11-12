@@ -1,0 +1,8 @@
+spring.application.name=CateSys
+
+spring.datasource.url=jdbc:jdbc:postgresql://localhost:5432/todo_list_db
+spring.datasource.username=seu_username
+spring.datasource.password=sua_senha
+spring.docker.compose.enabled=false
+
+api.security.token.secret=chave_secreta_para_token
