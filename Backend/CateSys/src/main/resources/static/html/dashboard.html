@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -14,6 +15,7 @@
           rel="stylesheet">
 
     <link href="/css/style.css" rel="stylesheet">
+
     <script src="/js/menu.js" defer></script>
 </head>
 
@@ -56,77 +58,121 @@
             <div class="page-heading">
                 <div>
                     <h1>Painel inicial</h1>
-                    <p>Visão geral das atividades da catequese.</p>
+
+                    <p>
+                        Visão geral das atividades da catequese.
+                    </p>
+
                     <small class="text-muted">
-                        Indicadores demonstrativos.
+                        Indicadores carregados do sistema.
                     </small>
                 </div>
             </div>
 
+            <!-- INDICADORES -->
             <div class="row g-3 mb-4">
 
+                <!-- CATEQUIZANDOS ATIVOS -->
                 <div class="col-sm-6 col-xl-3">
                     <div class="card stat-card">
+
                         <div class="stat-icon icon-blue">
                             <i class="bi bi-people"></i>
                         </div>
+
                         <div class="text-muted small">
                             Catequizandos ativos
                         </div>
-                        <div class="stat-value">4</div>
-                        <div class="stat-note">
-                            Cadastros ativos
+
+                        <div class="stat-value"
+                             id="totalCatequizandos">
+                            —
                         </div>
+
+                        <div class="stat-note">
+                            Informação não conectada
+                        </div>
+
                     </div>
                 </div>
 
+                <!-- CATEQUISTAS -->
                 <div class="col-sm-6 col-xl-3">
                     <div class="card stat-card">
+
                         <div class="stat-icon icon-gold">
                             <i class="bi bi-person-badge"></i>
                         </div>
+
                         <div class="text-muted small">
                             Catequistas
                         </div>
-                        <div class="stat-value">3</div>
-                        <div class="stat-note">
-                            Catequistas ativos
+
+                        <div class="stat-value"
+                             id="totalCatequistas">
+                            ...
                         </div>
+
+                        <div class="stat-note"
+                             id="descricaoCatequistas">
+                            Carregando cadastros
+                        </div>
+
                     </div>
                 </div>
 
+                <!-- TURMAS OFERTADAS -->
                 <div class="col-sm-6 col-xl-3">
                     <div class="card stat-card">
+
                         <div class="stat-icon icon-green">
                             <i class="bi bi-easel"></i>
                         </div>
+
                         <div class="text-muted small">
                             Turmas ofertadas
                         </div>
-                        <div class="stat-value">3</div>
-                        <div class="stat-note">
-                            Turmas disponíveis
+
+                        <div class="stat-value"
+                             id="totalTurmas">
+                            ...
                         </div>
+
+                        <div class="stat-note"
+                             id="descricaoTurmas">
+                            Carregando turmas
+                        </div>
+
                     </div>
                 </div>
 
+                <!-- CATEQUIZANDOS SEM TURMA -->
                 <div class="col-sm-6 col-xl-3">
                     <div class="card stat-card">
+
                         <div class="stat-icon icon-purple">
                             <i class="bi bi-person-exclamation"></i>
                         </div>
+
                         <div class="text-muted small">
                             Sem turma
                         </div>
-                        <div class="stat-value">1</div>
-                        <div class="stat-note">
-                            Aguardando matrícula
+
+                        <div class="stat-value"
+                             id="totalSemTurma">
+                            —
                         </div>
+
+                        <div class="stat-note">
+                            Informação não conectada
+                        </div>
+
                     </div>
                 </div>
 
             </div>
 
+            <!-- ACESSO RAPIDO -->
             <section class="card mb-4">
 
                 <div class="card-body">
@@ -141,6 +187,7 @@
                         <div class="col-md-6 col-xl-3">
                             <a class="quick-action"
                                href="/html/catequizandos.html">
+
                                 <i class="bi bi-person-plus"></i>
                                 Catequizandos
                             </a>
@@ -149,6 +196,7 @@
                         <div class="col-md-6 col-xl-3">
                             <a class="quick-action"
                                href="/html/catequistas.html">
+
                                 <i class="bi bi-person-badge"></i>
                                 Catequistas
                             </a>
@@ -157,6 +205,7 @@
                         <div class="col-md-6 col-xl-3">
                             <a class="quick-action"
                                href="/html/turmas.html">
+
                                 <i class="bi bi-easel"></i>
                                 Turmas
                             </a>
@@ -165,6 +214,7 @@
                         <div class="col-md-6 col-xl-3">
                             <a class="quick-action"
                                href="/html/relatorios.html">
+
                                 <i class="bi bi-file-earmark-bar-graph"></i>
                                 Relatórios
                             </a>
@@ -176,6 +226,7 @@
 
             </section>
 
+            <!-- GERENCIAMENTO CATEQUETICO -->
             <section class="card">
 
                 <div class="card-body">
@@ -197,10 +248,12 @@
 
         </div>
 
+        <!-- RODAPE -->
         <footer class="app-footer">
             CateSys · Paróquia São Francisco Xavier · Bastos/SP
         </footer>
 
+        <!-- OVERLAY DO MENU LATERAL -->
         <div
             class="sidebar-overlay"
             id="sidebarOverlay"
@@ -209,6 +262,147 @@
     </main>
 
 </div>
+
+<script>
+
+    // CONSULTAR API
+    async function consultarApi(url) {
+
+        const resposta = await fetch(url);
+
+        if (!resposta.ok) {
+            throw new Error(
+                "Erro HTTP " + resposta.status
+            );
+        }
+
+        return await resposta.json();
+    }
+
+
+    // CARREGAR TOTAL DE TURMAS
+    async function carregarTurmas() {
+
+        const numero =
+            document.getElementById("totalTurmas");
+
+        const descricao =
+            document.getElementById("descricaoTurmas");
+
+        try {
+
+            const turmas = await consultarApi(
+                "/api/turmas"
+            );
+
+            if (!Array.isArray(turmas)) {
+                throw new Error(
+                    "A API nao retornou uma lista"
+                );
+            }
+
+            // Considerar apenas turmas abertas
+            // ou em andamento
+            const turmasOfertadas = turmas.filter(turma => {
+
+                const status = String(
+                    turma.status || ""
+                ).trim().toUpperCase();
+
+                return status === "ABERTA" ||
+                       status === "EM_ANDAMENTO";
+            });
+
+            numero.textContent =
+                turmasOfertadas.length;
+
+            descricao.textContent =
+                "Turmas abertas ou em andamento";
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao carregar turmas:",
+                erro
+            );
+
+            numero.textContent = "—";
+
+            descricao.textContent =
+                "Não foi possível consultar";
+        }
+    }
+
+
+    // CARREGAR TOTAL DE CATEQUISTAS
+    async function carregarCatequistas() {
+
+        const numero =
+            document.getElementById("totalCatequistas");
+
+        const descricao =
+            document.getElementById("descricaoCatequistas");
+
+        try {
+
+            let resposta = await fetch(
+                "/api/catequistas"
+            );
+
+            // Compatibilidade com a rota antiga
+            if (resposta.status === 404) {
+                resposta = await fetch(
+                    "/catequistas"
+                );
+            }
+
+            if (!resposta.ok) {
+                throw new Error(
+                    "Erro HTTP " + resposta.status
+                );
+            }
+
+            const catequistas = await resposta.json();
+
+            if (!Array.isArray(catequistas)) {
+                throw new Error(
+                    "A API nao retornou uma lista"
+                );
+            }
+
+            numero.textContent =
+                catequistas.length;
+
+            descricao.textContent =
+                "Catequistas cadastrados";
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao carregar catequistas:",
+                erro
+            );
+
+            numero.textContent = "—";
+
+            descricao.textContent =
+                "Não foi possível consultar";
+        }
+    }
+
+
+    // INICIAR INDICADORES
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            carregarTurmas();
+            carregarCatequistas();
+
+        }
+    );
+
+</script>
 
 </body>
 </html>
