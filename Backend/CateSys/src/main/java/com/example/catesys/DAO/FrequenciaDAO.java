@@ -1,7 +1,6 @@
 package com.example.catesys.DAO;
 
 import com.example.catesys.Model.Frequencia;
-import com.example.catesys.Model.Secretaria;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;

@@ -42,6 +42,7 @@ public class AuthController {
             }
         }
         catch(SQLException e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
     }

@@ -14,6 +14,17 @@ public class FrequenciaFalta {
         this.matriculaId = matriculaId;
     }
 
+    public FrequenciaFalta(Date frequenciaData, int turmaId) {
+        this.frequenciaData = frequenciaData;
+        this.turmaId = turmaId;
+    }
+
+    public static FrequenciaFalta reconstituir(Date frequenciaData, int turmaId, int matriculaId, String justificativaBonificacao) {
+        FrequenciaFalta f = new FrequenciaFalta (frequenciaData, turmaId, matriculaId);
+        f.setJustificativaBonificacao(justificativaBonificacao);
+        return f;
+    }
+
     public Date getFrequenciaData() {
         return frequenciaData;
     }
