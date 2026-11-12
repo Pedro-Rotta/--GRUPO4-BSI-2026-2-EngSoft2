@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CateSys | Cadastrar Turma</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/cadastrar-turma.css">
+
+    <script src="/js/menu.js" defer></script>
+    <script src="/js/cadastrar-turma.js" defer></script>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- MENU LATERAL -->
+
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-area">
+
+        <!-- CABECALHO -->
+
+        <header class="topbar">
+
+            <button
+                type="button"
+                class="btn-menu"
+                id="menuToggle"
+                aria-label="Abrir menu"
+                aria-expanded="false"
+                aria-controls="sidebar"
+            >
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="breadcrumb-area">
+
+                <a href="/html/dashboard.html"
+                   class="text-decoration-none">
+                    CateSys
+                </a>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <strong>Cadastrar Turma</strong>
+
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <span class="today-date"></span>
+                <div class="top-avatar">CS</div>
+            </div>
+
+        </header>
+
+        <!-- CONTEUDO -->
+
+        <div class="page-content">
+
+            <div class="page-heading">
+
+                <div>
+                    <h1>Cadastrar Turma</h1>
+
+                    <p>
+                        Preencha as informações para
+                        criar uma turma de catequese.
+                    </p>
+                </div>
+
+                <a
+                    href="/html/trocar-catequista-turma.html"
+                    class="btn btn-outline-secondary"
+                >
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Voltar à F4
+                </a>
+
+            </div>
+
+            <section class="card">
+
+                <div class="card-body">
+
+                    <h2 class="card-title-cs mb-4">
+                        <i class="bi bi-easel me-2"></i>
+                        Dados da Turma
+                    </h2>
+
+                    <form id="formTurma" novalidate>
+
+                        <div class="row g-3">
+
+                            <!-- ETAPA -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="etapa"
+                                    class="form-label"
+                                >
+                                    Etapa *
+                                </label>
+
+                                <select
+                                    id="etapa"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="">
+                                        Selecione a etapa
+                                    </option>
+
+                                    <option value="EUCARISTIA_1">
+                                        Eucaristia 1
+                                    </option>
+
+                                    <option value="EUCARISTIA_2">
+                                        Eucaristia 2
+                                    </option>
+
+                                    <option value="CRISMA_1">
+                                        Crisma 1
+                                    </option>
+
+                                    <option value="CRISMA_2">
+                                        Crisma 2
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <!-- ANO DE OFERTA -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="anoOferta"
+                                    class="form-label"
+                                >
+                                    Ano de oferta *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="anoOferta"
+                                    class="form-control"
+                                    placeholder="Ex.: 2026"
+                                    maxlength="4"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{4}"
+                                    required
+                                >
+
+                            </div>
+
+                            <!-- DATA DE INICIO -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="dataInicio"
+                                    class="form-label"
+                                >
+                                    Data de início *
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="dataInicio"
+                                    class="form-control"
+                                    required
+                                >
+
+                            </div>
+
+                            <!-- DATA DE TERMINO -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="dataFim"
+                                    class="form-label"
+                                >
+                                    Data de término *
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="dataFim"
+                                    class="form-control"
+                                    required
+                                >
+
+                            </div>
+
+                            <!-- VAGAS -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="vagasTotais"
+                                    class="form-label"
+                                >
+                                    Total de vagas *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="vagasTotais"
+                                    class="form-control"
+                                    min="1"
+                                    step="1"
+                                    placeholder="Ex.: 30"
+                                    required
+                                >
+
+                            </div>
+
+                            <!-- STATUS -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="status"
+                                    class="form-label"
+                                >
+                                    Status *
+                                </label>
+
+                                <select
+                                    id="status"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="">
+                                        Selecione o status
+                                    </option>
+
+                                    <option value="ABERTA">
+                                        Aberta
+                                    </option>
+
+                                    <option value="EM_ANDAMENTO">
+                                        Em andamento
+                                    </option>
+
+                                    <option value="ENCERRADA">
+                                        Encerrada
+                                    </option>
+
+                                    <option value="CANCELADA">
+                                        Cancelada
+                                    </option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- LOCAL E HORARIO -->
+
+                        <h3 class="form-section-title">
+                            Local e Horário
+                        </h3>
+
+                        <p class="text-muted small">
+                            Informe os IDs da sala e do horário
+                            cadastrados no banco de dados.
+                        </p>
+
+                        <div class="row g-3">
+
+                            <!-- SALA -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="localId"
+                                    class="form-label"
+                                >
+                                    ID da sala *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="localId"
+                                    class="form-control"
+                                    min="1"
+                                    step="1"
+                                    placeholder="Ex.: 1"
+                                    required
+                                >
+
+                            </div>
+
+                            <!-- HORARIO -->
+
+                            <div class="col-md-6 campo">
+
+                                <label
+                                    for="horarioId"
+                                    class="form-label"
+                                >
+                                    ID do horário *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="horarioId"
+                                    class="form-control"
+                                    min="1"
+                                    step="1"
+                                    placeholder="Ex.: 1"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- CATEQUISTA INICIAL -->
+
+                        <h3 class="form-section-title">
+                            Catequista Inicial
+                        </h3>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-12 campo">
+
+                                <label
+                                    for="catequistaId"
+                                    class="form-label"
+                                >
+                                    Catequista responsável *
+                                </label>
+
+                                <select
+                                    id="catequistaId"
+                                    class="form-select"
+                                    required
+                                    disabled
+                                >
+                                    <option value="">
+                                        Carregando catequistas...
+                                    </option>
+                                </select>
+
+                                <small class="text-muted">
+                                    O catequista selecionado será
+                                    vinculado à turma no cadastro.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BOTOES -->
+
+                        <div class="d-flex flex-wrap justify-content-end gap-2 mt-4">
+
+                            <button
+                                type="button"
+                                id="btnLimpar"
+                                class="btn btn-outline-secondary"
+                            >
+                                <i class="bi bi-eraser me-1"></i>
+                                Limpar
+                            </button>
+
+                            <button
+                                type="submit"
+                                id="btnSalvar"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-check-circle me-1"></i>
+                                Cadastrar Turma
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    <!-- MENSAGENS -->
+
+                    <div
+                        id="mensagem"
+                        class="mt-3"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- RODAPE -->
+
+        <footer class="app-footer">
+            CateSys · Gerenciamento Catequético
+        </footer>
+
+        <div
+            class="sidebar-overlay"
+            id="sidebarOverlay"
+        ></div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

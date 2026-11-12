@@ -1,9 +1,17 @@
+
 package com.example.catesys.Model;
 
+import com.example.catesys.DAO.TurmaDAO;
 import com.example.catesys.Model.Enums.Etapa;
 import com.example.catesys.Model.Enums.StatusTurma;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
+
 public class Turma {
+
     private int id;
     private Etapa etapa;
     private String anoOferta;
@@ -17,7 +25,22 @@ public class Turma {
     private int localId;
     private int horarioId;
 
-    public Turma(Etapa etapa, String anoOferta, Date dataInicio, Date dataFim, int vagasTotais, int vagasDisponiveis, StatusTurma status, int catequistaId, int localHorarioid, int localId, int horarioId) {
+    public Turma() {
+    }
+
+    public Turma(
+            Etapa etapa,
+            String anoOferta,
+            Date dataInicio,
+            Date dataFim,
+            int vagasTotais,
+            int vagasDisponiveis,
+            StatusTurma status,
+            int catequistaId,
+            int localHorarioid,
+            int localId,
+            int horarioId
+    ) {
         this.etapa = etapa;
         this.anoOferta = anoOferta;
         this.dataInicio = dataInicio;
@@ -31,8 +54,45 @@ public class Turma {
         this.horarioId = horarioId;
     }
 
+
+    public List<Turma> buscarTodos(Connection conn)
+            throws SQLException {
+
+        TurmaDAO dao = new TurmaDAO(conn);
+
+        return dao.buscarTodos();
+    }
+
+    public Turma buscarPorId(Connection conn, int id)
+            throws SQLException {
+
+        TurmaDAO dao = new TurmaDAO(conn);
+
+        return dao.buscarPorId(id);
+    }
+
+
+    public boolean gravar(Connection conn) throws SQLException {
+
+        TurmaDAO dao = new TurmaDAO(conn);
+
+        int novoId = dao.gravar(this);
+
+        if (novoId <= 0) {
+            return false;
+        }
+
+        this.id = novoId;
+
+        return true;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Etapa getEtapa() {

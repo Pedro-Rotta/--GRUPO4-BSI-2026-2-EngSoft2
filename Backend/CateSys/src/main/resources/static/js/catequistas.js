@@ -500,7 +500,7 @@ async function salvarCadastro(evento) {
         );
 
         window.location.href =
-            "/consultar-catequistas.html";
+            "/html/consultar-catequistas.html";
 
     } catch (erro) {
         mostrarErroFormulario(erro);
@@ -729,7 +729,7 @@ function renderizarTabela(catequistas) {
 
         editar.addEventListener("click", () => {
             window.location.href =
-                `/cadastrar-catequista.html?id=${c.id}`;
+                `/html/cadastrar-catequista.html?id=${c.id}`;
         });
 
         const excluir = document.createElement("button");

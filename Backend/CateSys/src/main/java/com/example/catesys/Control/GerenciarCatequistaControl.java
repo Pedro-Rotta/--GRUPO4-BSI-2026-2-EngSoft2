@@ -11,33 +11,44 @@ public class GerenciarCatequistaControl {
 
     private final Catequista model = new Catequista();
 
-    public boolean cadastrar(Catequista catequista) throws SQLException {
+    // CADASTRAR CATEQUISTA
+
+    public boolean cadastrar(Catequista catequista)
+            throws SQLException {
+
         validarCatequista(catequista);
 
         Conexao conexao = Conexao.getInstancia();
 
-        try {
-            Connection conn = conexao.getConnection();
+        synchronized (conexao) {
 
-            verificarCpfDuplicado(conn, catequista);
+            try {
+                Connection conn = conexao.getConnection();
 
-            boolean gravou = catequista.gravar(conn);
+                verificarCpfDuplicado(conn, catequista);
 
-            if (gravou) {
-                conexao.commit();
-            } else {
-                conexao.rollback();
+                boolean gravou = catequista.gravar(conn);
+
+                if (gravou) {
+                    conexao.commit();
+                } else {
+                    conexao.rollback();
+                }
+
+                return gravou;
+
+            } catch (SQLException | RuntimeException e) {
+                fazerRollback(conexao, e);
+                throw e;
             }
-
-            return gravou;
-
-        } catch (SQLException | RuntimeException e) {
-            conexao.rollback();
-            throw e;
         }
     }
 
-    public boolean alterar(Catequista catequista) throws SQLException {
+    // ALTERAR CATEQUISTA
+
+    public boolean alterar(Catequista catequista)
+            throws SQLException {
+
         validarCatequista(catequista);
 
         if (catequista.getId() <= 0) {
@@ -46,125 +57,170 @@ public class GerenciarCatequistaControl {
 
         Conexao conexao = Conexao.getInstancia();
 
-        try {
-            Connection conn = conexao.getConnection();
+        synchronized (conexao) {
 
-            verificarCpfDuplicado(conn, catequista);
+            try {
+                Connection conn = conexao.getConnection();
 
-            boolean alterou = catequista.alterar(conn);
+                verificarCpfDuplicado(conn, catequista);
 
-            if (alterou) {
-                conexao.commit();
-            } else {
-                conexao.rollback();
+                boolean alterou = catequista.alterar(conn);
+
+                if (alterou) {
+                    conexao.commit();
+                } else {
+                    conexao.rollback();
+                }
+
+                return alterou;
+
+            } catch (SQLException | RuntimeException e) {
+                fazerRollback(conexao, e);
+                throw e;
             }
-
-            return alterou;
-
-        } catch (SQLException | RuntimeException e) {
-            conexao.rollback();
-            throw e;
         }
     }
+
+    // EXCLUIR CATEQUISTA
 
     public boolean excluir(int id) throws SQLException {
+
         if (id <= 0) {
             throw new IllegalArgumentException("ID invalido");
         }
 
         Conexao conexao = Conexao.getInstancia();
 
-        try {
-            boolean excluiu = model.excluir(
-                    conexao.getConnection(), id
-            );
+        synchronized (conexao) {
 
-            if (excluiu) {
-                conexao.commit();
-            } else {
+            try {
+                boolean excluiu = model.excluir(
+                        conexao.getConnection(),
+                        id
+                );
+
+                if (excluiu) {
+                    conexao.commit();
+                } else {
+                    conexao.rollback();
+                }
+
+                return excluiu;
+
+            } catch (SQLException | RuntimeException e) {
+                fazerRollback(conexao, e);
+                throw e;
+            }
+        }
+    }
+
+    // CONSULTAR CATEQUISTA POR ID
+
+    public Catequista buscarPorId(int id)
+            throws SQLException {
+
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID invalido");
+        }
+
+        Conexao conexao = Conexao.getInstancia();
+
+        synchronized (conexao) {
+
+            try {
+                return model.buscarPorId(
+                        conexao.getConnection(),
+                        id
+                );
+
+            } finally {
                 conexao.rollback();
             }
-
-            return excluiu;
-
-        } catch (SQLException | RuntimeException e) {
-            conexao.rollback();
-            throw e;
         }
     }
 
-    public Catequista buscarPorId(int id) throws SQLException {
-        if (id <= 0) {
-            throw new IllegalArgumentException("ID invalido");
-        }
+    // LISTAR TODOS OS CATEQUISTAS
+
+    public List<Catequista> buscarTodos()
+            throws SQLException {
 
         Conexao conexao = Conexao.getInstancia();
 
-        try {
-            return model.buscarPorId(
-                    conexao.getConnection(), id
-            );
+        synchronized (conexao) {
 
-        } finally {
-            conexao.rollback();
+            try {
+                return model.buscarTodos(
+                        conexao.getConnection()
+                );
+
+            } finally {
+                conexao.rollback();
+            }
         }
     }
 
-    public List<Catequista> buscarTodos() throws SQLException {
-        Conexao conexao = Conexao.getInstancia();
-
-        try {
-            return model.buscarTodos(
-                    conexao.getConnection()
-            );
-
-        } finally {
-            conexao.rollback();
-        }
-    }
+    // BUSCAR CATEQUISTAS POR NOME
 
     public List<Catequista> buscarPorNome(String nome)
             throws SQLException {
 
         if (nome == null) {
-            throw new IllegalArgumentException("Nome obrigatorio");
+            throw new IllegalArgumentException(
+                    "Nome obrigatorio"
+            );
         }
 
         Conexao conexao = Conexao.getInstancia();
 
-        try {
-            return model.buscarPorNome(
-                    conexao.getConnection(), nome
-            );
+        synchronized (conexao) {
 
-        } finally {
-            conexao.rollback();
+            try {
+                return model.buscarPorNome(
+                        conexao.getConnection(),
+                        nome
+                );
+
+            } finally {
+                conexao.rollback();
+            }
         }
     }
+
+    // BUSCAR CATEQUISTA POR CPF EXATO
 
     public Catequista buscarPorCpf(String cpf)
             throws SQLException {
 
         if (cpf == null || cpf.isBlank()) {
-            throw new IllegalArgumentException("CPF obrigatorio");
+            throw new IllegalArgumentException(
+                    "CPF obrigatorio"
+            );
         }
 
         Conexao conexao = Conexao.getInstancia();
 
-        try {
-            return model.buscarPorCpf(
-                    conexao.getConnection(), cpf
-            );
+        synchronized (conexao) {
 
-        } finally {
-            conexao.rollback();
+            try {
+                return model.buscarPorCpf(
+                        conexao.getConnection(),
+                        cpf
+                );
+
+            } finally {
+                conexao.rollback();
+            }
         }
     }
+
+    // BUSCAR CATEQUISTAS POR CPF PARCIAL
 
     public List<Catequista> buscarPorCpfParcial(String cpf)
             throws SQLException {
 
-        if (cpf == null || cpf.replaceAll("\\D", "").isBlank()) {
+        if (cpf == null ||
+                cpf.replaceAll("\\D", "").isBlank()) {
+
             throw new IllegalArgumentException(
                     "Informe ao menos um numero do CPF"
             );
@@ -172,17 +228,25 @@ public class GerenciarCatequistaControl {
 
         Conexao conexao = Conexao.getInstancia();
 
-        try {
-            return model.buscarPorCpfParcial(
-                    conexao.getConnection(), cpf
-            );
+        synchronized (conexao) {
 
-        } finally {
-            conexao.rollback();
+            try {
+                return model.buscarPorCpfParcial(
+                        conexao.getConnection(),
+                        cpf
+                );
+
+            } finally {
+                conexao.rollback();
+            }
         }
     }
 
-    private void validarCatequista(Catequista catequista) {
+    // VALIDAR DADOS DO CATEQUISTA
+
+    private void validarCatequista(
+            Catequista catequista
+    ) {
 
         if (catequista == null) {
             throw new IllegalArgumentException(
@@ -193,13 +257,16 @@ public class GerenciarCatequistaControl {
         catequista.validarDados();
     }
 
+    // VERIFICAR CPF DUPLICADO
+
     private void verificarCpfDuplicado(
             Connection conn,
             Catequista catequista
     ) throws SQLException {
 
         Catequista existente = model.buscarPorCpf(
-                conn, catequista.getCpf()
+                conn,
+                catequista.getCpf()
         );
 
         if (existente != null &&
@@ -208,6 +275,21 @@ public class GerenciarCatequistaControl {
             throw new IllegalArgumentException(
                     "Ja existe um catequista cadastrado com esse CPF"
             );
+        }
+    }
+
+    // DESFAZER TRANSACAO EM CASO DE ERRO
+
+    private void fazerRollback(
+            Conexao conexao,
+            Exception erroOriginal
+    ) {
+
+        try {
+            conexao.rollback();
+
+        } catch (SQLException erroRollback) {
+            erroOriginal.addSuppressed(erroRollback);
         }
     }
 }

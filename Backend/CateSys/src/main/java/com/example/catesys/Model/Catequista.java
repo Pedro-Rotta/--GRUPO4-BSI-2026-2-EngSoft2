@@ -32,8 +32,6 @@ public class Catequista {
         this.secretaria = secretaria;
     }
 
-    // OPERACOES COM O DAO
-
     public boolean gravar(Connection conexao) throws SQLException {
         CatequistaDAO dao = new CatequistaDAO(conexao);
         return dao.gravar(this);
@@ -79,8 +77,6 @@ public class Catequista {
         CatequistaDAO dao = new CatequistaDAO(conexao);
         return dao.buscarPorCpfParcial(cpf);
     }
-
-    // GETTERS E SETTERS
 
     public int getId() {
         return id;
@@ -153,8 +149,6 @@ public class Catequista {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-    // VALIDACAO DOS DADOS
 
     public void validarDados() {
 

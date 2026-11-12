@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CateSys | Gerenciar Catequistas</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/js/menu.js" defer></script>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-area">
+
+        <header class="topbar">
+
+            <button
+                type="button"
+                class="btn-menu"
+                id="menuToggle"
+                aria-label="Abrir menu"
+                aria-controls="sidebar"
+                aria-expanded="false">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="breadcrumb-area">
+                <span>CateSys</span>
+                <i class="bi bi-chevron-right"></i>
+                <strong>Catequistas</strong>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <span class="today-date"></span>
+                <div class="top-avatar">CS</div>
+            </div>
+
+        </header>
+
+        <div class="page-content">
+
+            <div class="page-heading">
+
+                <div>
+                    <h1>Gerenciar Catequistas</h1>
+                    <p>
+                        Selecione a operação que deseja realizar.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="row g-4">
+
+                <!-- CADASTRAR -->
+
+                <div class="col-md-6 col-xl-4">
+
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+
+                            <div class="stat-icon icon-blue">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+
+                            <h2 class="card-title-cs mb-3">
+                                Cadastrar Catequista
+                            </h2>
+
+                            <p class="text-muted small flex-grow-1">
+                                Cadastre um novo catequista
+                                informando seus dados pessoais
+                                e de contato.
+                            </p>
+
+                            <a
+                                href="/html/cadastrar-catequista.html"
+                                class="btn btn-primary mt-3">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                Cadastrar
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CONSULTAR -->
+
+                <div class="col-md-6 col-xl-4">
+
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+
+                            <div class="stat-icon icon-green">
+                                <i class="bi bi-search"></i>
+                            </div>
+
+                            <h2 class="card-title-cs mb-3">
+                                Consultar Catequistas
+                            </h2>
+
+                            <p class="text-muted small flex-grow-1">
+                                Consulte os catequistas cadastrados,
+                                pesquise por nome ou CPF,
+                                edite e exclua registros.
+                            </p>
+
+                            <a
+                                href="/html/consultar-catequistas.html"
+                                class="btn btn-primary mt-3">
+                                <i class="bi bi-search me-1"></i>
+                                Consultar
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TROCAR CATEQUISTA -->
+
+                <div class="col-md-6 col-xl-4">
+
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+
+                            <div class="stat-icon icon-gold">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </div>
+
+                            <h2 class="card-title-cs mb-3">
+                                Trocar Catequista da Turma
+                            </h2>
+
+                            <p class="text-muted small flex-grow-1">
+                                Substitua um catequista vinculado
+                                a uma turma, mantendo os demais
+                                vínculos existentes.
+                            </p>
+
+                            <a
+                                href="/html/trocar-catequista-turma.html"
+                                class="btn btn-primary mt-3">
+                                <i class="bi bi-arrow-left-right me-1"></i>
+                                Acessar F4
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <footer class="app-footer">
+            CateSys · Paróquia São Francisco Xavier · Bastos/SP
+        </footer>
+
+        <div
+            id="sidebarOverlay"
+            class="sidebar-overlay"></div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
