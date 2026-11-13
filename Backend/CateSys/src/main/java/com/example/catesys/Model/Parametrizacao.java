@@ -35,13 +35,6 @@ public class Parametrizacao {
             "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA",
             "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO");
 
-    // Construtor que a DAO usa para montar o objeto com o que leu do banco
-    public Parametrizacao(String nome, String cnpj, String responsavel) {
-        this.nome = nome;
-        this.cnpj = cnpj;
-        this.responsavel = responsavel;
-    }
-
     // Recebe a conexão da Control e cria a DAO com ela
     public Parametrizacao(Connection conn) {
         this.dao = new ParametrizacaoDAO(conn);
@@ -49,19 +42,16 @@ public class Parametrizacao {
 
     // ---------- Operações ----------
 
-    // Retorna a parametrização gravada, ou null se ainda não foi feita
-    public Parametrizacao buscar() throws SQLException {
-        return dao.buscar();
-    }
-
-    public boolean existe() throws SQLException {
-        return dao.buscar() != null;
+    // Carrega nesta própria Model o que está gravado.
+    // Retorna false se ainda não foi feita.
+    public boolean buscar() throws SQLException {
+        return dao.buscar(this);
     }
 
     // Se a tabela está vazia insere, senão altera.
     // Retorna true se inseriu e false se alterou.
     public boolean salvar() throws SQLException {
-        if (dao.buscar() == null) {
+        if (!dao.existe()) {
             dao.gravar(this);
             return true;
         }

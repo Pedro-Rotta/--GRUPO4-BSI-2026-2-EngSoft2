@@ -19,20 +19,31 @@ public class ParametrizacaoDAO {
         this.conn = conn;
     }
 
-    // Retorna null se a parametrização ainda não foi feita
-    public Parametrizacao buscar() throws SQLException {
+    // Só confere se já existe cadastro
+    public boolean existe() throws SQLException {
+        String sql = "SELECT 1 FROM parametrizacao WHERE parametrizacao_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, ID_UNICO);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    // Preenche a Model recebida com o que está no banco.
+    // Retorna false se ainda não existe cadastro.
+    public boolean buscar(Parametrizacao p) throws SQLException {
         String sql = "SELECT * FROM parametrizacao WHERE parametrizacao_id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, ID_UNICO);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
-                    return null;
+                    return false;
                 }
-                Parametrizacao p = new Parametrizacao( //tirar daqui--------------------
-                        rs.getString("nome"),
-                        rs.getString("cnpj"),
-                        rs.getString("responsavel"));
                 p.setId(rs.getInt("parametrizacao_id"));
+                p.setNome(rs.getString("nome"));
+                p.setCnpj(rs.getString("cnpj"));
+                p.setResponsavel(rs.getString("responsavel"));
                 p.setTelefone(rs.getString("telefone"));
                 p.setEmail(rs.getString("email"));
                 p.setSite(rs.getString("site"));
@@ -44,7 +55,7 @@ public class ParametrizacaoDAO {
                 p.setUf(rs.getString("uf"));
                 p.setLogotipoGrande(rs.getString("logotipo_grande"));
                 p.setLogotipoPequeno(rs.getString("logotipo_pequeno"));
-                return p;
+                return true;
             }
         }
     }

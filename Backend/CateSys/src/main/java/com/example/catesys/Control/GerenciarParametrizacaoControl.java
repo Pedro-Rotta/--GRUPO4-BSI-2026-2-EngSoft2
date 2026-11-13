@@ -28,12 +28,11 @@ public class GerenciarParametrizacaoControl {
         Conexao conexao = Conexao.getInstancia();                           // Control abre a conexão
         Parametrizacao model = new Parametrizacao(conexao.getConnection()); // Control instancia a Model
         try {
-            Parametrizacao atual = model.buscar();
-            if (atual == null) {
+            if (!model.buscar()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("erros", List.of("Parametrização ainda não realizada")));
             }
-            return ResponseEntity.ok(converter(atual));
+            return ResponseEntity.ok(converter(model));
         } finally {
             conexao.rollback();  // só leitura, encerra a transação
         }
