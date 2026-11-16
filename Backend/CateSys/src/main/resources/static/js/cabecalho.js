@@ -1,63 +1,95 @@
-// Cabeçalho do sistema: mostra o logotipo e o nome da catequese lidos da parametrização.
-// Para usar numa tela, inclua no fim do <body> (a tela precisa carregar o Bootstrap):
-//   <script src="js/cabecalho.js"></script>                       (barra com o logotipo pequeno)
-//   <script src="js/cabecalho.js" data-logo="grande"></script>    (faixa com o logotipo grande)
+// Preenche o menu lateral, o rodapé e a data com os dados da parametrização.
+// Os elementos são achados pelas classes do CSS do grupo (sidebar-brand, app-footer, today-date),
+// então funciona em qualquer tela que use esse layout, sem mudar o HTML dela.
+// Para usar numa tela: <script src="js/cabecalho.js"></script> no fim do <body>.
 (function () {
-    const NOME_PADRAO = 'CateSys';   // usado enquanto a parametrização não existe
-    const grande = document.currentScript && document.currentScript.dataset.logo === 'grande';
+    const marca = document.querySelector('.sidebar-brand');
+    const icone = marca && marca.querySelector('img');
+    const nomeNoMenu = marca && marca.querySelector('span');   // <span>Cate<span>Sys</span></span>
+    const rodape = document.querySelector('.app-footer');
+    const data = document.querySelector('.today-date');
 
-    // Imagem do projeto (img/logo.png) vira /img/logo.png, para funcionar em qualquer tela
+    // Guarda como a tela veio escrita: é o que aparece enquanto não existe parametrização
+    const iconeOriginal = icone ? icone.getAttribute('src') : '';
+    const nomeOriginal = nomeNoMenu ? nomeNoMenu.innerHTML : '';
+    const rodapeOriginal = rodape ? rodape.textContent : '';
+
+    // Imagem do projeto (img/logo.png) vira /img/logo.png, para funcionar em qualquer pasta
     function caminhoDaImagem(logo) {
         return (/^(https?:)?\/\//.test(logo) || logo.startsWith('/')) ? logo : '/' + logo;
     }
 
-    function montar(nome, logo) {
-        let cab = document.getElementById('cabecalho-sistema');
-        if (!cab) {
-            cab = document.createElement('header');
-            cab.id = 'cabecalho-sistema';
-            document.body.prepend(cab);
-        }
-        cab.textContent = '';
-        cab.className = grande
-            ? 'bg-white border-bottom py-4 text-center'
-            : 'bg-white border-bottom py-2 px-3 d-flex align-items-center gap-3';
+    function mostrarData() {
+        if (!data) return;
+        data.textContent = new Date().toLocaleDateString('pt-BR',
+            { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    }
 
-        if (logo) {
-            const img = document.createElement('img');
-            img.src = caminhoDaImagem(logo);
-            img.alt = 'Logotipo de ' + nome;
-            img.style.maxHeight = grande ? '120px' : '40px';
-            img.addEventListener('error', () => img.remove());   // imagem não encontrada: mostra só o nome
-            cab.appendChild(img);
+    function usarDados(d) {
+        if (nomeNoMenu) {
+            nomeNoMenu.textContent = d.nome;                    // textContent: nunca interpreta HTML
+            nomeNoMenu.title = d.nome;
+            // nome grande: letra menor e no máximo 2 linhas, para caber no menu
+            nomeNoMenu.style.fontSize = d.nome.length > 14 ? '1rem' : '';
+            nomeNoMenu.style.lineHeight = '1.15';
+            nomeNoMenu.style.minWidth = '0';
+            nomeNoMenu.style.overflow = 'hidden';
+            nomeNoMenu.style.display = '-webkit-box';
+            nomeNoMenu.style.webkitLineClamp = '2';
+            nomeNoMenu.style.webkitBoxOrient = 'vertical';
         }
+        if (icone) {
+            icone.src = d.logotipoPequeno ? caminhoDaImagem(d.logotipoPequeno) : iconeOriginal;
+            icone.alt = 'Logotipo de ' + d.nome;
+        }
+        if (rodape) {
+            const local = [d.cidade, d.uf].filter(Boolean).join('/');
+            rodape.textContent = ['CateSys', d.nome, local].filter(Boolean).join(' · ');
+        }
+    }
 
-        const titulo = document.createElement(grande ? 'h1' : 'span');
-        titulo.className = grande ? 'h3 text-primary mt-2 mb-0' : 'fw-semibold';
-        titulo.textContent = nome;                                // textContent: nunca interpreta HTML
-        cab.appendChild(titulo);
+    function usarPadrao() {
+        if (nomeNoMenu) {
+            nomeNoMenu.innerHTML = nomeOriginal;
+            nomeNoMenu.removeAttribute('style');
+            nomeNoMenu.removeAttribute('title');
+        }
+        if (icone) icone.src = iconeOriginal;
+        if (rodape) rodape.textContent = rodapeOriginal;
+    }
+
+    // Se a imagem cadastrada não for encontrada, volta para o ícone padrão
+    if (icone) {
+        icone.addEventListener('error', () => {
+            if (icone.getAttribute('src') !== iconeOriginal) icone.src = iconeOriginal;
+        });
     }
 
     async function atualizar() {
         try {
             const resp = await fetch('/api/parametrizacao');
-            if (!resp.ok) {                                       // 404: ainda não foi parametrizado
-                montar(NOME_PADRAO, '');
+            if (!resp.ok) {                                     // 404: ainda não foi parametrizado
+                usarPadrao();
                 return;
             }
-            const dados = await resp.json();
-            montar(dados.nome || NOME_PADRAO, grande ? dados.logotipoGrande : dados.logotipoPequeno);
+            usarDados(await resp.json());
         } catch (e) {
-            montar(NOME_PADRAO, '');
+            usarPadrao();
         }
     }
 
-    // Outras telas podem chamar isto depois de salvar, para o cabeçalho mudar na hora
+    // A tela de parametrização chama isto depois de salvar, para o menu mudar na hora
     window.atualizarCabecalho = atualizar;
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', atualizar);
-    } else {
-        atualizar();
+    // Em telas baixas o menu rola: deixa o item da página atual visível.
+    // Repete quando a página termina de carregar, porque as fontes mudam a altura do menu.
+    function mostrarItemAtivo() {
+        const item = document.querySelector('.sidebar-nav .nav-link.active');
+        if (item) item.scrollIntoView({ block: 'nearest' });
     }
+    mostrarItemAtivo();
+    window.addEventListener('load', mostrarItemAtivo);
+
+    mostrarData();
+    atualizar();
 })();
