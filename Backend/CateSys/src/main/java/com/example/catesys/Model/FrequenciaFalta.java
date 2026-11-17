@@ -2,6 +2,7 @@ package com.example.catesys.Model;
 
 import java.util.Date;
 
+// Falta de uma matrícula em um encontro (tabela frequencia_faltas).
 public class FrequenciaFalta {
     private Date frequenciaData;
     private int turmaId;
@@ -14,28 +15,23 @@ public class FrequenciaFalta {
         this.matriculaId = matriculaId;
     }
 
-    public Date getFrequenciaData() {
-        return frequenciaData;
+    public static FrequenciaFalta reconstituir(Date frequenciaData, int turmaId, int matriculaId,
+                                               String justificativaBonificacao) {
+        FrequenciaFalta f = new FrequenciaFalta(frequenciaData, turmaId, matriculaId);
+        f.justificativaBonificacao = justificativaBonificacao;
+        return f;
     }
 
-    public void setFrequenciaData(Date frequenciaData) {
-        this.frequenciaData = frequenciaData;
+    public Date getFrequenciaData() {
+        return frequenciaData;
     }
 
     public int getTurmaId() {
         return turmaId;
     }
 
-    public void setTurmaId(int turmaId) {
-        this.turmaId = turmaId;
-    }
-
     public int getMatriculaId() {
         return matriculaId;
-    }
-
-    public void setMatriculaId(int matriculaId) {
-        this.matriculaId = matriculaId;
     }
 
     public String getJustificativaBonificacao() {

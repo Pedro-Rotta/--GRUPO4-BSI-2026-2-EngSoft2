@@ -1,0 +1,10 @@
+spring.application.name=CateSys
+
+# Banco PostgreSQL (Neon), acessado por JDBC puro pela classe Control.Conexao
+db.url=jdbc:postgresql://<host>/CateSys?sslmode=require
+db.user=<usuario>
+db.password=<senha>
+spring.docker.compose.enabled=false
+
+# Chave usada para assinar o token JWT do login
+api.security.token.secret=<chave_secreta>
