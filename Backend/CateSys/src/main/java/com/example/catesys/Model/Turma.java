@@ -21,20 +21,21 @@ public class Turma {
     private int vagasDisponiveis;
     private StatusTurma status;
     private int catequistaId;
-    private int localHorarioid;
     private int localId;
     private int horarioId;
 
-    public Turma(Etapa etapa, String anoOferta, Date dataInicio, Date dataFim, int vagasTotais, int vagasDisponiveis, StatusTurma status, int catequistaId, int localHorarioid, int localId, int horarioId) {
+    // RF_F5 Ofertar Turma: a Control instancia a turma com os dados do request.
+    // A turma nasce com todas as vagas livres e status OFERTADA; o ano vem da data de início.
+    public Turma(Etapa etapa, Date dataInicio, Date dataFim, int vagasTotais,
+                 int catequistaId, int localId, int horarioId) {
         this.etapa = etapa;
-        this.anoOferta = anoOferta;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
+        this.anoOferta = dataInicio == null ? null : String.valueOf(paraLocalDate(dataInicio).getYear());
         this.vagasTotais = vagasTotais;
-        this.vagasDisponiveis = vagasDisponiveis;
-        this.status = status;
+        this.vagasDisponiveis = vagasTotais;
+        this.status = StatusTurma.OFERTADA;
         this.catequistaId = catequistaId;
-        this.localHorarioid = localHorarioid;
         this.localId = localId;
         this.horarioId = horarioId;
     }
@@ -42,21 +43,22 @@ public class Turma {
     public Turma() {
     }
 
-    // RF_F5 Ofertar Turma: a turma nasce com todas as vagas livres e status OFERTADA.
-    public static Turma ofertar(Etapa etapa, Date dataInicio, Date dataFim, int vagasTotais,
-                                int catequistaId, int localId, int horarioId) {
-        String ano = dataInicio == null ? null
-                : String.valueOf(new java.sql.Date(dataInicio.getTime()).toLocalDate().getYear());
-        return new Turma(etapa, ano, dataInicio, dataFim, vagasTotais, vagasTotais,
-                StatusTurma.OFERTADA, catequistaId, 0, localId, horarioId);
-    }
-
+    // Usado pelo DAO para montar a turma vinda do banco (com id, vagas e status gravados).
     public static Turma reconstituir(int id, Etapa etapa, String anoOferta, Date dataInicio, Date dataFim,
                                      int vagasTotais, int vagasDisponiveis, StatusTurma status,
                                      int catequistaId, int localId, int horarioId) {
-        Turma t = new Turma(etapa, anoOferta, dataInicio, dataFim, vagasTotais, vagasDisponiveis,
-                status, catequistaId, 0, localId, horarioId);
+        Turma t = new Turma();
         t.id = id;
+        t.etapa = etapa;
+        t.anoOferta = anoOferta;
+        t.dataInicio = dataInicio;
+        t.dataFim = dataFim;
+        t.vagasTotais = vagasTotais;
+        t.vagasDisponiveis = vagasDisponiveis;
+        t.status = status;
+        t.catequistaId = catequistaId;
+        t.localId = localId;
+        t.horarioId = horarioId;
         return t;
     }
 
@@ -196,14 +198,6 @@ public class Turma {
 
     public void setCatequistaId(int catequistaId) {
         this.catequistaId = catequistaId;
-    }
-
-    public int getLocalHorarioid() {
-        return localHorarioid;
-    }
-
-    public void setLocalHorarioid(int localHorarioid) {
-        this.localHorarioid = localHorarioid;
     }
 
     public int getLocalId() {

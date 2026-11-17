@@ -102,6 +102,7 @@ async function requisicao(url, opcoes = {}) {
         try {
             const json = JSON.parse(texto);
             detalhe =
+                (Array.isArray(json.erros) && json.erros.join(" ")) ||
                 json.message ||
                 json.detail ||
                 json.error ||
@@ -270,10 +271,7 @@ async function carregarEdicao(id) {
     elemento("dataInicio").value = catequista.dataInicio || "";
     elemento("dataFim").value = catequista.dataFim || "";
 
-    // A API atual não informa secretariaId.
-    // O Controller deve preservar o vínculo no PUT.
-    elemento("secretariaId").value = "";
-    elemento("secretariaId").disabled = true;
+    elemento("secretariaId").value = catequista.secretariaId ?? "";
 
     elemento("tituloFormulario").textContent =
         "Editar Catequista";
@@ -463,7 +461,7 @@ async function pesquisarCatequistas() {
     }
 
     try {
-        let lista;
+        const filtros = new URLSearchParams();
 
         if (tipo === "cpf") {
             const cpf = somenteNumeros(valor);
@@ -472,24 +470,12 @@ async function pesquisarCatequistas() {
                 throw new Error("Digite os 11 números do CPF.");
             }
 
-            try {
-                const resultado = await requisicao(
-                    `${API_URL}/cpf?cpf=${encodeURIComponent(cpf)}`
-                );
-                lista = [resultado];
-            } catch (erro) {
-                if (erro.status === 404) {
-                    lista = [];
-                } else {
-                    throw erro;
-                }
-            }
-
+            filtros.set("cpf", cpf);
         } else {
-            lista = await requisicao(
-                `${API_URL}/nome?nome=${encodeURIComponent(valor)}`
-            );
+            filtros.set("nome", valor);
         }
+
+        const lista = await requisicao(`${API_URL}?${filtros}`);
 
         renderizarTabela(lista);
 

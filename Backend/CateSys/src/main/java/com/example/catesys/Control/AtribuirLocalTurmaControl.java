@@ -41,7 +41,7 @@ public class AtribuirLocalTurmaControl {
         try {
             Map<Integer, Local> locais = porId(new Local().buscarTodos(conexao), Local::getId);
             Map<Integer, Horario> horarios = porId(new Horario().buscarTodos(conexao), Horario::getId);
-            Map<Integer, Catequista> catequistas = porId(Catequista.buscarTodos(conexao.getConnection()), Catequista::getId);
+            Map<Integer, Catequista> catequistas = porId(new Catequista().buscarTodos(conexao), Catequista::getId);
             return new Turma().buscarTodas(conexao).stream()
                     .map(t -> converter(t, catequistas.get(t.getCatequistaId()),
                             locais.get(t.getLocalId()), horarios.get(t.getHorarioId())))
@@ -148,7 +148,7 @@ public class AtribuirLocalTurmaControl {
 
     private TurmaResponse completa(Turma turma, Conexao conexao) throws SQLException {
         Catequista catequista = turma.getCatequistaId() > 0
-                ? Catequista.buscarPorId(conexao.getConnection(), turma.getCatequistaId()) : null;
+                ? new Catequista().buscarPorId(turma.getCatequistaId(), conexao) : null;
         Local local = new Local().buscarPorId(turma.getLocalId(), conexao);
         Horario horario = new Horario().buscarPorId(turma.getHorarioId(), conexao);
         return converter(turma, catequista, local, horario);

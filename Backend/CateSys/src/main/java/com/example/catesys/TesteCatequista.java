@@ -2,133 +2,71 @@
 package com.example.catesys;
 
 import com.example.catesys.Control.GerenciarCatequistaControl;
-import com.example.catesys.Model.Catequista;
+import com.example.catesys.Control.GerenciarCatequistaControl.CatequistaRequest;
+import com.example.catesys.Control.GerenciarCatequistaControl.CatequistaResponse;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 
+// Teste manual do RF_B3 contra o banco: cadastra, consulta, altera e exclui um catequista de teste.
 public class TesteCatequista {
 
     public static void main(String[] args) {
-
-        GerenciarCatequistaControl control =
-                new GerenciarCatequistaControl();
-
+        GerenciarCatequistaControl control = new GerenciarCatequistaControl();
         String cpfTeste = "11144477735";
         int idTeste = 0;
 
         try {
-            // Verificar se o CPF ja existe
-            if (control.buscarPorCpf(cpfTeste) != null) {
+            if (!control.buscar(null, cpfTeste).isEmpty()) {
                 System.out.println("CPF ja cadastrado. Teste cancelado.");
                 return;
             }
 
             // 1 - CADASTRAR
-            Catequista c = new Catequista(
-                    "Catequista Teste",
-                    cpfTeste,
-                    "18999999999",
-                    "teste@exemplo.com",
-                    null
-            );
+            CatequistaRequest dados = new CatequistaRequest("Catequista Teste", cpfTeste, "18999999999",
+                    "teste@exemplo.com", null, LocalDate.of(2026, 11, 6), null);
+            System.out.println("CADASTRAR: " + control.cadastrar(dados).getStatusCode());
 
-            c.setDataInicio(Date.valueOf("2026-11-06"));
-
-            boolean cadastrou = control.cadastrar(c);
-            System.out.println("CADASTRAR: " + cadastrou);
-
-            if (!cadastrou) {
-                return;
-            }
-
-            // 2 - CONSULTAR
-            Catequista encontrado = control.buscarPorCpf(cpfTeste);
-
-            if (encontrado == null) {
+            // 2 - CONSULTAR POR CPF
+            List<CatequistaResponse> encontrados = control.buscar(null, cpfTeste);
+            if (encontrados.isEmpty())
                 throw new IllegalStateException("Cadastro nao encontrado");
-            }
+            idTeste = encontrados.get(0).id();
+            System.out.println("CONSULTAR: " + encontrados.get(0).nome() + " (ID " + idTeste + ")");
 
-            idTeste = encontrado.getId();
+            // 3 - CPF DUPLICADO (espera 409)
+            CatequistaRequest duplicado = new CatequistaRequest("Outro Catequista", cpfTeste, "18888888888",
+                    "outro@exemplo.com", null, null, null);
+            System.out.println("CPF DUPLICADO: " + control.cadastrar(duplicado).getStatusCode());
 
-            System.out.println("CONSULTAR: " + encontrado.getNome());
-            System.out.println("ID: " + idTeste);
+            // 4 - VALIDACAO (espera 400 com todos os erros)
+            CatequistaRequest invalido = new CatequistaRequest("", "123", "1", "x", null, null, null);
+            System.out.println("INVALIDO: " + control.cadastrar(invalido).getBody());
 
-            // 3 - TESTAR CPF DUPLICADO
-            try {
-                Catequista duplicado = new Catequista(
-                        "Outro Catequista",
-                        cpfTeste,
-                        "18888888888",
-                        "outro@exemplo.com",
-                        null
-                );
+            // 5 - ALTERAR
+            CatequistaRequest alterado = new CatequistaRequest("Catequista Teste", cpfTeste, "18888888888",
+                    "teste@exemplo.com", null, LocalDate.of(2026, 11, 6), null);
+            System.out.println("ALTERAR: " + control.alterar(idTeste, alterado).getStatusCode());
+            System.out.println("NOVO TELEFONE: " + control.buscar(null, cpfTeste).get(0).telefone());
 
-                control.cadastrar(duplicado);
-                System.out.println("ERRO: CPF duplicado foi aceito");
+            // 6 - BUSCAR POR NOME
+            System.out.println("BUSCAR POR NOME: " + control.buscar("Catequista Teste", null).size());
 
-            } catch (IllegalArgumentException e) {
-                System.out.println("CPF DUPLICADO: Bloqueado");
-            }
-
-            // 4 - ALTERAR
-            encontrado.setTelefone("18888888888");
-
-            boolean alterou = control.alterar(encontrado);
-            System.out.println("ALTERAR: " + alterou);
-
-            // 5 - CONFIRMAR ALTERACAO
-            Catequista atualizado = control.buscarPorId(idTeste);
-
-            if (atualizado != null) {
-                System.out.println(
-                        "NOVO TELEFONE: " + atualizado.getTelefone()
-                );
-            }
-
-            // 6 - LISTAR TODOS
-            System.out.println(
-                    "TOTAL DE CATEQUISTAS: " +
-                            control.buscarTodos().size()
-            );
-
-            // 7 - BUSCAR POR NOME
-            System.out.println(
-                    "BUSCAR POR NOME: " +
-                            control.buscarPorNome("Catequista Teste").size()
-            );
-
-            // 8 - EXCLUIR
-            boolean excluiu = control.excluir(idTeste);
-            System.out.println("EXCLUIR: " + excluiu);
-
-            // 9 - CONFIRMAR EXCLUSAO
-            Catequista excluido = control.buscarPorId(idTeste);
-
-            System.out.println(
-                    "SELECT APOS DELETE: " +
-                            (excluido == null ? "Nao encontrado" : "Encontrado")
-            );
+            // 7 - EXCLUIR
+            System.out.println("EXCLUIR: " + control.excluir(idTeste).getStatusCode());
+            System.out.println("SELECT APOS DELETE: " + control.buscarPorId(idTeste).getStatusCode());
+            idTeste = 0;
 
         } catch (Exception e) {
             e.printStackTrace();
-
         } finally {
             // Limpa somente o registro criado no teste
             if (idTeste > 0) {
                 try {
-                    Catequista restante = control.buscarPorId(idTeste);
-
-                    if (restante != null
-                            && cpfTeste.equals(restante.getCpf())) {
-
-                        control.excluir(idTeste);
-                        System.out.println("LIMPEZA: Registro removido");
-                    }
-
+                    control.excluir(idTeste);
+                    System.out.println("LIMPEZA: Registro removido");
                 } catch (Exception e) {
-                    System.err.println(
-                            "ATENCAO: verificar registro de teste ID " + idTeste
-                    );
+                    System.err.println("ATENCAO: verificar registro de teste ID " + idTeste);
                     e.printStackTrace();
                 }
             }

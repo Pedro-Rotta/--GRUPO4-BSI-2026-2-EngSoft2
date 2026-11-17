@@ -47,8 +47,8 @@ public class OfertarTurmaControl {
         Conexao conexao = Conexao.getInstancia();
         try {
             List<String> etapas = Arrays.stream(Etapa.values()).map(Enum::name).toList();
-            List<OpcaoResponse> catequistas = Catequista.buscarTodos(conexao.getConnection()).stream()
-                    .filter(this::catequistaAtivo)
+            List<OpcaoResponse> catequistas = new Catequista().buscarTodos(conexao).stream()
+                    .filter(Catequista::estaAtivo)
                     .map(c -> new OpcaoResponse(c.getId(), c.getNome()))
                     .toList();
             List<LocalResponse> locais = new Local().buscarTodos(conexao).stream()
@@ -92,7 +92,7 @@ public class OfertarTurmaControl {
     // Passos 3 a 6: valida, verifica agenda do local e do catequista, cria a turma e devolve o resumo.
     @PostMapping
     public synchronized ResponseEntity<?> ofertar(@RequestBody OfertarTurmaRequest request) throws SQLException {
-        Turma turma = Turma.ofertar(
+        Turma turma = new Turma(
                 vazio(request.etapa()) ? null : Etapa.valueOf(request.etapa().trim().toUpperCase()),
                 converter(request.dataInicio()), converter(request.dataFim()),
                 valor(request.vagas()), valor(request.catequistaId()),
@@ -103,7 +103,7 @@ public class OfertarTurmaControl {
 
         Conexao conexao = Conexao.getInstancia();
         try {
-            Catequista catequista = Catequista.buscarPorId(conexao.getConnection(), turma.getCatequistaId());
+            Catequista catequista = new Catequista().buscarPorId(turma.getCatequistaId(), conexao);
             Local local = new Local().buscarPorId(turma.getLocalId(), conexao);
             Horario horario = new Horario().buscarPorId(turma.getHorarioId(), conexao);
             if (catequista == null)
@@ -166,10 +166,6 @@ public class OfertarTurmaControl {
 
     private static String hora(java.sql.Time t) {
         return t == null ? null : t.toLocalTime().toString(); // "14:00"
-    }
-
-    private boolean catequistaAtivo(Catequista c) {
-        return c.getDataFim() == null || c.getDataFim().after(new Date());
     }
 
     private ResponseEntity<?> erro(Conexao conexao, HttpStatus status, String mensagem) throws SQLException {
