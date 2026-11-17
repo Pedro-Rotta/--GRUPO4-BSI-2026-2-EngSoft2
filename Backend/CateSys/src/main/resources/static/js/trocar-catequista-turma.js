@@ -46,7 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const json = JSON.parse(texto);
 
-                mensagem = json.message ||
+                mensagem = (Array.isArray(json.erros) && json.erros.join(" ")) ||
+                    json.message ||
                     json.detail ||
                     json.error ||
                     mensagem;
@@ -62,6 +63,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         return JSON.parse(texto);
+    }
+
+    // DETALHES DA TURMA: dados da turma + catequistas vinculados (RF_F4)
+
+    async function buscarDetalhesTurma(id) {
+
+        const [detalhe, vinculados] = await Promise.all([
+            requisicao(`${API_TURMAS}/${encodeURIComponent(id)}`),
+            requisicao(`${API_TURMAS}/${encodeURIComponent(id)}/catequistas`)
+        ]);
+
+        const turma = detalhe && detalhe.turma ? detalhe.turma : detalhe;
+        const horario = turma && turma.horario;
+
+        return {
+            ...turma,
+            catequistasIds: (vinculados || []).map(c => c.id),
+            localNome: turma ? turma.local : null,
+            horarioDescricao: horario
+                ? `${horario.diaSemana} ${horario.horaInicio}–${horario.horaFim}`
+                : null
+        };
     }
 
     // MENSAGENS
@@ -454,9 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
 
-            const turma = await requisicao(
-                `${API_TURMAS}/${encodeURIComponent(id)}`
-            );
+            const turma = await buscarDetalhesTurma(id);
 
             if (!turma || !turma.id) {
                 throw new Error(
@@ -588,9 +609,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const idTurma = turmaAtual.id;
 
-            // Esta rota sera implementada na proxima
-            // etapa do backend.
-
             await requisicao(
                 `${API_TURMAS}/${idTurma}/catequista`,
                 {
@@ -609,9 +627,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Recarrega o estado real do banco.
 
-            const atualizada = await requisicao(
-                `${API_TURMAS}/${idTurma}`
-            );
+            const atualizada = await buscarDetalhesTurma(idTurma);
 
             exibirTurma(atualizada);
 

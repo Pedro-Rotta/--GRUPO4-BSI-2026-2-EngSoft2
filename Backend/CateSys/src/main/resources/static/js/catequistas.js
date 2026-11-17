@@ -451,15 +451,8 @@ async function carregarEdicao(id) {
     elemento("dataFim").value =
         catequista.dataFim || "";
 
-    // A API preserva a secretaria existente
-    // durante a alteração.
-
-<<<<<<<< HEAD:Backend/CateSys/src/main/resources/static/VIEW/catequistas.js
-    elemento("secretariaId").value = catequista.secretariaId ?? "";
-========
-    elemento("secretariaId").value = "";
-    elemento("secretariaId").disabled = true;
->>>>>>>> origin/feature/gerenciar-catequista:Backend/CateSys/src/main/resources/static/js/catequistas.js
+    elemento("secretariaId").value =
+        catequista.secretariaId ?? "";
 
     elemento("tituloFormulario").textContent =
         "Editar Catequista";
@@ -504,13 +497,8 @@ async function salvarCadastro(evento) {
             }
         );
 
-<<<<<<<< HEAD:Backend/CateSys/src/main/resources/static/VIEW/catequistas.js
-        // Retorna à consulta após salvar.
-        window.location.href = "consultar-catequistas.html";
-========
         window.location.href =
             "/html/consultar-catequistas.html";
->>>>>>>> origin/feature/gerenciar-catequista:Backend/CateSys/src/main/resources/static/js/catequistas.js
 
     } catch (erro) {
         mostrarErroFormulario(erro);
@@ -739,11 +727,7 @@ function renderizarTabela(catequistas) {
 
         editar.addEventListener("click", () => {
             window.location.href =
-<<<<<<<< HEAD:Backend/CateSys/src/main/resources/static/VIEW/catequistas.js
-                `cadastrar-catequista.html?id=${c.id}`;
-========
                 `/html/cadastrar-catequista.html?id=${c.id}`;
->>>>>>>> origin/feature/gerenciar-catequista:Backend/CateSys/src/main/resources/static/js/catequistas.js
         });
 
         const excluir = document.createElement("button");
@@ -786,7 +770,7 @@ async function pesquisarCatequistas() {
     }
 
     try {
-        const filtros = new URLSearchParams();
+        let lista;
 
         if (tipo === "cpf") {
             const cpf = somenteNumeros(valor);
@@ -797,21 +781,17 @@ async function pesquisarCatequistas() {
                 );
             }
 
-<<<<<<<< HEAD:Backend/CateSys/src/main/resources/static/VIEW/catequistas.js
-            filtros.set("cpf", cpf);
-========
             // Pesquisa parcial: retorna uma lista.
 
             lista = await requisicao(
-                `${API_URL}/cpf?cpf=${encodeURIComponent(cpf)}`
+                `${API_URL}?cpf=${encodeURIComponent(cpf)}`
             );
 
->>>>>>>> origin/feature/gerenciar-catequista:Backend/CateSys/src/main/resources/static/js/catequistas.js
         } else {
-            filtros.set("nome", valor);
+            lista = await requisicao(
+                `${API_URL}?nome=${encodeURIComponent(valor)}`
+            );
         }
-
-        const lista = await requisicao(`${API_URL}?${filtros}`);
 
         renderizarTabela(lista);
 

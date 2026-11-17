@@ -1,0 +1,261 @@
+/* Complemento do style.css para as telas de cadastro (catequizandos, ofertar turma, atribuir local
+   e parametrização): notificação na tela, validação de obrigatórios e modal de erro de conexão. */
+
+.painel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 10px rgba(20, 45, 76, .05);
+}
+
+.painel h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 12px;
+}
+
+.painel fieldset {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin: 0 0 16px;
+    padding: 12px 16px 16px;
+}
+
+.painel legend {
+    float: none;
+    width: auto;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--navy);
+    padding: 0 6px;
+    margin: 0;
+}
+
+.dica {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: .88rem;
+}
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px 16px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo.largo {
+    grid-column: span 2;
+}
+
+.campo label {
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+}
+
+.painel input,
+.painel select {
+    font: inherit;
+    font-size: .9rem;
+    padding: 8px 10px;
+    border: 1px solid #d5dce5;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+}
+
+.painel input:focus,
+.painel select:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 .2rem rgba(37, 136, 200, .15);
+}
+
+/* Validação dos obrigatórios: só destaca depois da tentativa de envio */
+.erro-campo {
+    display: none;
+    color: #b3261e;
+    font-size: .78rem;
+    margin-top: 3px;
+}
+
+form.validado input:invalid,
+form.validado select:invalid {
+    border-color: #b3261e;
+    background: #fdecea;
+}
+
+form.validado input:invalid ~ .erro-campo,
+form.validado select:invalid ~ .erro-campo {
+    display: block;
+}
+
+.acoes,
+.filtros {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filtros .campo {
+    flex: 1 1 220px;
+}
+
+/* Botões gerados pelos scripts das telas (btn primario / btn pequeno / btn perigo) */
+.btn:not([class*="btn-"]) {
+    border: 1px solid #d5dce5;
+    background: #fff;
+    color: var(--ink);
+    padding: 7px 14px;
+}
+
+.btn:not([class*="btn-"]):hover {
+    background: var(--paper);
+}
+
+.btn.primario {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+}
+
+.btn.primario:hover {
+    background: var(--navy-dark);
+    color: #fff;
+}
+
+.btn.perigo {
+    background: #b3261e;
+    border-color: #b3261e;
+    color: #fff;
+}
+
+.btn.pequeno {
+    padding: 4px 10px;
+    font-size: .8rem;
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+/* Área de notificação (sem alert()) */
+.notificacao {
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1px solid;
+    font-size: .9rem;
+}
+
+.notificacao.sucesso {
+    background: #e7f5ea;
+    color: #1e6b34;
+    border-color: #9fd3ad;
+}
+
+.notificacao.erro {
+    background: #fdecea;
+    color: #b3261e;
+    border-color: #f1aca6;
+}
+
+.notificacao ul {
+    margin: 4px 0 0;
+    padding-left: 20px;
+}
+
+.tabela-container {
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+.painel table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+}
+
+.painel th,
+.painel td {
+    text-align: left;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+}
+
+.painel th {
+    background: var(--paper);
+    color: var(--muted);
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+td.vazio {
+    text-align: center;
+    color: var(--muted);
+}
+
+.col-acoes {
+    width: 1%;
+    white-space: nowrap;
+}
+
+td.col-acoes {
+    display: flex;
+    gap: 6px;
+}
+
+.confirmar {
+    color: #b3261e;
+    font-size: .82rem;
+    align-self: center;
+}
+
+/* Modal só para erro fatal de conexão */
+.modal-erro {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(13, 33, 57, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.modal-caixa {
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px 24px;
+    max-width: 420px;
+}
+
+.modal-caixa h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: #b3261e;
+}
+
+.oculto {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    .campo.largo {
+        grid-column: auto;
+    }
+}

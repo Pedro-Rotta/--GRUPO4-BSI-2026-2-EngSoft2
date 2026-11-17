@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function formatarStatus(status) {
         const nomes = {
+            OFERTADA: "Ofertada",
             ABERTA: "Aberta",
             EM_ANDAMENTO: "Em andamento",
             ENCERRADA: "Encerrada",
@@ -92,7 +93,12 @@ document.addEventListener("DOMContentLoaded", () => {
             link.className = "btn btn-sm btn-outline-primary";
             link.textContent = "Trocar Catequista";
 
-            acoes.appendChild(link);
+            const linkLocal = document.createElement("a");
+            linkLocal.href = `/html/atribuir-local.html?id=${encodeURIComponent(turma.id)}`;
+            linkLocal.className = "btn btn-sm btn-outline-secondary ms-1";
+            linkLocal.textContent = "Atribuir Local";
+
+            acoes.append(link, linkLocal);
             linha.appendChild(acoes);
 
             tabela.appendChild(linha);

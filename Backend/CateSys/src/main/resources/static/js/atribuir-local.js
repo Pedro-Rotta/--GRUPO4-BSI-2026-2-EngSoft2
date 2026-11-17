@@ -246,3 +246,7 @@ $("btnFechar").addEventListener("click", () => {
 });
 
 listarTurmas();
+
+// Vindo da lista de turmas (?id=...), já abre a turma escolhida.
+const idDaUrl = new URLSearchParams(window.location.search).get("id");
+if (idDaUrl && /^[1-9]\d*$/.test(idDaUrl)) buscarTurma(idDaUrl);

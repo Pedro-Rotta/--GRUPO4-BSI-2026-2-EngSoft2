@@ -75,11 +75,11 @@ public class CatequistaDAO implements IDAO<Catequista> {
         return buscar(null, null);
     }
 
-    // Filtros opcionais: parte do nome e CPF (só dígitos). Sem filtro, lista todos.
+    // Filtros opcionais: parte do nome e parte do CPF (só dígitos). Sem filtro, lista todos.
     public List<Catequista> buscar(String nome, String cpf) throws SQLException {
         String sql = SELECT_CATEQUISTA + """
                 WHERE (CAST(? AS varchar) IS NULL OR nome ILIKE '%' || ? || '%')
-                  AND (CAST(? AS varchar) IS NULL OR cpf = ?)
+                  AND (CAST(? AS varchar) IS NULL OR cpf LIKE '%' || ? || '%')
                 ORDER BY nome
                 """;
         String filtroNome = vazio(nome) ? null : nome.trim();

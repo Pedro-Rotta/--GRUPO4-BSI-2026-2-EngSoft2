@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CateSys | Atribuir Local</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/telas.css">
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/menu.js" defer></script>
+    <script src="/js/atribuir-local.js" defer></script>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-area">
+
+        <header class="topbar">
+            <button type="button" class="btn-menu" id="menuToggle" aria-label="Abrir menu"
+                    aria-controls="sidebar" aria-expanded="false">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="breadcrumb-area">
+                <span>CateSys</span>
+                <i class="bi bi-chevron-right"></i>
+                <a href="/html/turmas.html">Turmas</a><i class="bi bi-chevron-right"></i><strong>Atribuir Local</strong>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <span class="today-date"></span>
+                <div class="top-avatar">CS</div>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <div class="page-heading">
+                <div>
+                    <h1>Atribuir Local à Turma</h1>
+                    <p>Troque o local e o horário de uma turma existente.</p>
+                </div>
+            </div>
+
+
+            <div id="notificacao" class="notificacao oculto" role="status" aria-live="polite"></div>
+
+            <!-- Passo 1: escolher a turma -->
+            <section class="painel">
+                <h2>Atribuir Local à Turma</h2>
+                <p class="dica">Informe o id da turma ou escolha na lista abaixo.
+                    <a href="ofertar-turma.html">Ofertar nova turma</a></p>
+                <form id="formBusca" class="filtros">
+                    <div class="campo">
+                        <label for="turmaId">Id da turma</label>
+                        <input id="turmaId" type="number" min="1" step="1" required>
+                    </div>
+                    <button type="submit" class="btn primario">Buscar turma</button>
+                </form>
+
+                <div class="tabela-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Etapa</th>
+                            <th>Período</th>
+                            <th>Catequista</th>
+                            <th>Local</th>
+                            <th>Horário</th>
+                            <th>Status</th>
+                            <th class="col-acoes">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabelaTurmas">
+                        <tr><td colspan="8" class="vazio">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Passos 2 a 6: local e horário -->
+            <section id="painelLocal" class="painel oculto">
+                <h2 id="tituloTurma">Turma</h2>
+                <div class="tabela-container">
+                    <table>
+                        <tbody id="dadosTurma"></tbody>
+                    </table>
+                </div>
+
+                <form id="formLocal" novalidate>
+                    <fieldset>
+                        <legend>Novo local e horário</legend>
+                        <div class="grade">
+                            <div class="campo">
+                                <label for="local">Local *</label>
+                                <select id="local" required></select>
+                                <span class="erro-campo">Selecione o local.</span>
+                            </div>
+                            <div class="campo">
+                                <label for="horario">Horário disponível *</label>
+                                <select id="horario" required disabled>
+                                    <option value="">Escolha o local primeiro</option>
+                                </select>
+                                <span class="erro-campo">Selecione um horário disponível.</span>
+                            </div>
+                        </div>
+                        <p id="avisoLocal" class="dica oculto"></p>
+                    </fieldset>
+                    <div class="acoes">
+                        <button type="submit" id="btnAtribuir" class="btn primario">Atribuir local</button>
+                        <button type="button" id="btnFechar" class="btn">Fechar</button>
+                    </div>
+                </form>
+            </section>
+
+        <div id="modalErro" class="modal-erro oculto" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+            <div class="modal-caixa">
+                <h3 id="modalTitulo">Falha de conexão</h3>
+                <p>Não foi possível falar com o servidor. Verifique se a aplicação está rodando.</p>
+                <button type="button" class="btn primario" id="btnFecharModal">Fechar</button>
+            </div>
+        </div>
+        </div>
+
+        <footer class="app-footer">
+            CateSys · Gerenciamento Catequético
+        </footer>
+
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    </main>
+
+</div>
+
+</body>
+</html>
