@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CateSys | Trocar Catequista da Turma</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet"
+          href="/css/trocar-catequista-turma.css">
+
+    <script src="/js/menu.js" defer></script>
+    <script src="/js/trocar-catequista-turma.js" defer></script>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- MENU LATERAL -->
+
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-area">
+
+        <!-- CABECALHO -->
+
+        <header class="topbar">
+
+            <button
+                type="button"
+                class="btn-menu"
+                id="menuToggle"
+                aria-label="Abrir menu"
+                aria-expanded="false"
+                aria-controls="sidebar"
+            >
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="breadcrumb-area">
+
+                <a href="/html/dashboard.html"
+                   class="text-decoration-none">
+                    CateSys
+                </a>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <a href="/html/catequistas.html"
+                   class="text-decoration-none">
+                    Catequistas
+                </a>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <strong>Trocar Catequista da Turma</strong>
+
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <span class="today-date"></span>
+                <div class="top-avatar">CS</div>
+            </div>
+
+        </header>
+
+        <div class="page-content">
+
+            <!-- TITULO -->
+
+            
+        <div class="page-heading">
+
+            <div>
+                <h1>Trocar Catequista da Turma</h1>
+
+                <p>
+                    Substitua um catequista vinculado
+                    a uma turma.
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <a href="/html/cadastrar-turma.html"
+                class="btn btn-primary">
+
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Nova Turma
+
+                </a>
+
+                <a href="/html/catequistas.html"
+                class="btn btn-outline-secondary">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Voltar
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+            <!-- LOCALIZAR TURMA -->
+
+            <section class="card mb-4">
+
+                <div class="card-body">
+
+                    <h2 class="card-title-cs mb-3">
+                        <i class="bi bi-search me-2"></i>
+                        Localizar Turma
+                    </h2>
+
+                    <div class="row g-3 align-items-end">
+
+                        <div class="col-md-8">
+
+                            <label
+                                for="turmaId"
+                                class="form-label"
+                            >
+                                Selecione a turma *
+                            </label>
+
+                            <select
+                                id="turmaId"
+                                class="form-select"
+                                required
+                                disabled
+                            >
+                                <option value="">
+                                    Carregando turmas...
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <button
+                                type="button"
+                                class="btn btn-primary w-100"
+                                id="btnBuscarTurma"
+                                disabled
+                            >
+                                <i class="bi bi-search me-1"></i>
+                                Buscar Turma
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- INFORMACOES DA TURMA -->
+
+            <section
+                class="card mb-4"
+                id="secaoTurma"
+                hidden
+            >
+
+                <div class="card-body">
+
+                    <h2 class="card-title-cs mb-4">
+                        <i class="bi bi-easel me-2"></i>
+                        Informações da Turma
+                    </h2>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Turma
+                                </span>
+
+                                <strong id="nomeTurma">
+                                    -
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Status
+                                </span>
+
+                                <strong id="statusTurma">
+                                    -
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Dia e horário
+                                </span>
+
+                                <strong id="horarioTurma">
+                                    -
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Local
+                                </span>
+
+                                <strong id="localTurma">
+                                    -
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- SELECIONAR CATEQUISTA ATUAL -->
+
+                    <h3 class="form-section-title">
+                        Catequista que será substituído
+                    </h3>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="catequistaAtualId"
+                            class="form-label"
+                        >
+                            Selecione o catequista atual *
+                        </label>
+
+                        <select
+                            id="catequistaAtualId"
+                            class="form-select"
+                            required
+                            disabled
+                        >
+                            <option value="">
+                                Selecione o catequista
+                                que será substituído
+                            </option>
+                        </select>
+
+                        <small class="text-muted">
+                            Somente o vínculo selecionado
+                            será alterado. Os demais
+                            catequistas permanecerão
+                            na turma.
+                        </small>
+
+                    </div>
+
+                    <!-- DADOS DO CATEQUISTA ATUAL -->
+
+                    <div class="catequista-atual">
+
+                        <div class="catequista-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+
+                        <div>
+
+                            <span class="info-label">
+                                Catequista selecionado
+                            </span>
+
+                            <strong
+                                id="nomeCatequistaAtual"
+                                class="d-block"
+                            >
+                                Nenhum selecionado
+                            </strong>
+
+                            <small
+                                id="cpfCatequistaAtual"
+                                class="text-muted"
+                            ></small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- SELECIONAR NOVO CATEQUISTA -->
+
+            <section
+                class="card mb-4"
+                id="secaoTroca"
+                hidden
+            >
+
+                <div class="card-body">
+
+                    <h2 class="card-title-cs mb-3">
+                        <i class="bi bi-arrow-left-right me-2"></i>
+                        Selecionar Novo Catequista
+                    </h2>
+
+                    <form id="formTroca" novalidate>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-12">
+
+                                <label
+                                    for="novoCatequistaId"
+                                    class="form-label"
+                                >
+                                    Novo catequista *
+                                </label>
+
+                                <select
+                                    id="novoCatequistaId"
+                                    class="form-select"
+                                    required
+                                    disabled
+                                >
+                                    <option value="">
+                                        Selecione o novo catequista
+                                    </option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Selecione um catequista válido.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- AVISO -->
+
+                        <div
+                            class="alert alert-warning mt-4"
+                            role="note"
+                        >
+
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+
+                            O sistema verificará se o
+                            novo catequista já pertence
+                            à turma ou possui conflito
+                            de horário antes de
+                            confirmar a troca.
+
+                        </div>
+
+                        <!-- BOTOES -->
+
+                        <div class="d-flex flex-wrap gap-2 justify-content-end mt-4">
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                id="btnCancelar"
+                            >
+                                Cancelar
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                id="btnConfirmar"
+                                disabled
+                            >
+                                <i class="bi bi-check-circle me-1"></i>
+                                Confirmar Troca
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+            <!-- MENSAGENS -->
+
+            <div
+                id="mensagem"
+                role="status"
+                aria-live="polite"
+                hidden
+            ></div>
+
+        </div>
+
+        <!-- RODAPE -->
+
+        <footer class="app-footer">
+            CateSys · Gerenciamento Catequético
+        </footer>
+
+        <!-- FUNDO DO MENU MOBILE -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebarOverlay"
+        ></div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,6 +1,4 @@
 
-/* CORES */
-
 :root {
     --primary: #2563eb;
     --primary-dark: #1d4ed8;
@@ -13,8 +11,6 @@
     --border: #cbd5e1;
 }
 
-/* CONFIGURACOES GERAIS */
-
 * {
     box-sizing: border-box;
 }
@@ -25,7 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: var(--background);
+    background: var(--background);
     color: var(--text);
     line-height: 1.5;
 }
@@ -33,7 +29,7 @@ body {
 /* CABECALHO */
 
 header {
-    background-color: #1e293b;
+    background: #1e293b;
     color: white;
     padding: 22px 8%;
 }
@@ -49,7 +45,7 @@ header p {
     font-size: 14px;
 }
 
-/* CONTEUDO PRINCIPAL */
+/* CONTEUDO */
 
 main {
     flex: 1;
@@ -59,7 +55,7 @@ main {
 }
 
 .painel {
-    background-color: var(--surface);
+    background: var(--surface);
     padding: 28px;
     margin-bottom: 25px;
     border-radius: 12px;
@@ -67,17 +63,13 @@ main {
 }
 
 .painel h2 {
-    margin-top: 0;
-    margin-bottom: 8px;
+    margin: 0 0 8px;
     font-size: 24px;
-    color: var(--text);
 }
 
 .painel h3 {
-    margin-top: 25px;
-    margin-bottom: 18px;
+    margin: 25px 0 18px;
     font-size: 18px;
-    color: #334155;
 }
 
 .painel p {
@@ -103,10 +95,7 @@ main {
 .campo label {
     font-size: 14px;
     font-weight: bold;
-    color: var(--text);
 }
-
-/* CAMPOS DE ENTRADA */
 
 input,
 select {
@@ -117,11 +106,9 @@ select {
     border-radius: 7px;
     font-family: inherit;
     font-size: 14px;
-    background-color: white;
+    background: white;
     color: var(--text);
-    transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input::placeholder {
@@ -137,9 +124,46 @@ select:focus {
 
 input:disabled,
 select:disabled {
-    background-color: #f1f5f9;
+    background: #f1f5f9;
     color: #64748b;
     cursor: not-allowed;
+}
+
+/* VALIDACAO DOS CAMPOS */
+
+#formCatequista.tentou-enviar
+.campo input:invalid,
+
+#formCatequista.tentou-enviar
+.campo select:invalid,
+
+.campo input.campo-invalido,
+.campo select.campo-invalido {
+    border: 2px solid var(--danger);
+    background: #fff5f5;
+}
+
+#formCatequista.tentou-enviar
+.campo input:invalid:focus,
+
+.campo input.campo-invalido:focus,
+.campo select.campo-invalido:focus {
+    outline: none;
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.erro-campo {
+    display: block;
+    color: var(--danger);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 3px;
+}
+
+#formCatequista.tentou-enviar
+.campo input:valid:not(:placeholder-shown) {
+    border-color: var(--success);
 }
 
 /* BOTOES */
@@ -161,9 +185,7 @@ button {
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    transition:
-        background-color 0.2s,
-        transform 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 button:hover {
@@ -186,44 +208,38 @@ button[hidden] {
     display: none;
 }
 
-/* BOTAO CADASTRAR OU SALVAR */
-
 #btnSalvar {
-    background-color: var(--primary);
+    background: var(--primary);
     color: white;
 }
 
 #btnSalvar:hover {
-    background-color: var(--primary-dark);
+    background: var(--primary-dark);
 }
-
-/* BOTOES SECUNDARIOS */
 
 #btnCancelar,
 #btnLimpar,
 #btnListar {
-    background-color: #e2e8f0;
+    background: #e2e8f0;
     color: var(--text);
 }
 
 #btnCancelar:hover,
 #btnLimpar:hover,
 #btnListar:hover {
-    background-color: #cbd5e1;
+    background: #cbd5e1;
 }
 
-/* BOTAO PESQUISAR */
-
 #btnPesquisar {
-    background-color: var(--success);
+    background: var(--success);
     color: white;
 }
 
 #btnPesquisar:hover {
-    background-color: #15803d;
+    background: #15803d;
 }
 
-/* MENSAGENS DO SISTEMA */
+/* MENSAGENS */
 
 #mensagem {
     margin-top: 18px;
@@ -244,34 +260,7 @@ button[hidden] {
     color: var(--danger);
 }
 
-/* CAMPOS COM ERROS */
-
-.campo input.campo-invalido,
-.campo select.campo-invalido {
-    border: 2px solid var(--danger);
-    background-color: #fff5f5;
-}
-
-.campo input.campo-invalido:focus,
-.campo select.campo-invalido:focus {
-    outline: none;
-    border-color: var(--danger);
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
-}
-
-.erro-campo {
-    display: block;
-    color: var(--danger);
-    font-size: 12px;
-    font-weight: 500;
-    margin-top: 3px;
-}
-
-.campo input.campo-valido {
-    border-color: var(--success);
-}
-
-/* PESQUISA DE CATEQUISTAS */
+/* PESQUISA */
 
 .pesquisa {
     display: flex;
@@ -290,7 +279,7 @@ button[hidden] {
     min-height: 44px;
 }
 
-/* TABELA DE CATEQUISTAS */
+/* TABELA */
 
 .tabela-container {
     width: 100%;
@@ -307,7 +296,7 @@ table {
 }
 
 thead {
-    background-color: #f1f5f9;
+    background: #f1f5f9;
 }
 
 th,
@@ -328,7 +317,7 @@ td {
 }
 
 tbody tr:hover {
-    background-color: #f8fafc;
+    background: #f8fafc;
 }
 
 tbody tr:last-child td {
@@ -339,7 +328,7 @@ td:last-child {
     white-space: nowrap;
 }
 
-/* BOTOES EDITAR E EXCLUIR */
+/* EDITAR E EXCLUIR */
 
 .btn-editar,
 .btn-excluir {
@@ -350,21 +339,21 @@ td:last-child {
 }
 
 .btn-editar {
-    background-color: #f59e0b;
+    background: #f59e0b;
     color: #1e293b;
 }
 
 .btn-editar:hover {
-    background-color: #d97706;
+    background: #d97706;
 }
 
 .btn-excluir {
-    background-color: var(--danger);
+    background: var(--danger);
     color: white;
 }
 
 .btn-excluir:hover {
-    background-color: #b91c1c;
+    background: #b91c1c;
 }
 
 /* PAGINA INICIAL */
@@ -376,14 +365,11 @@ td:last-child {
 
 .pagina-inicial h2 {
     font-size: 30px;
-    color: var(--text);
 }
 
 .pagina-inicial > p {
     font-size: 15px;
 }
-
-/* MENU DA PAGINA INICIAL */
 
 .menu-catequistas {
     display: grid;
@@ -401,19 +387,15 @@ td:last-child {
     padding: 35px 24px;
     text-decoration: none;
     color: var(--text);
-    background-color: #f8fafc;
+    background: #f8fafc;
     border: 2px solid #e2e8f0;
     border-radius: 14px;
-    transition:
-        background-color 0.2s,
-        border-color 0.2s,
-        transform 0.2s,
-        box-shadow 0.2s;
+    transition: all 0.2s;
 }
 
 .opcao-menu:hover {
     border-color: var(--primary);
-    background-color: #eff6ff;
+    background: #eff6ff;
     transform: translateY(-3px);
     box-shadow: 0 5px 18px rgba(37, 99, 235, 0.1);
 }
@@ -421,7 +403,6 @@ td:last-child {
 .opcao-menu h3 {
     margin: 0;
     font-size: 21px;
-    color: var(--text);
 }
 
 .opcao-menu p {
@@ -435,7 +416,7 @@ td:last-child {
     justify-content: center;
     width: 65px;
     height: 65px;
-    background-color: #dbeafe;
+    background: #dbeafe;
     color: var(--primary);
     border-radius: 50%;
     font-size: 40px;
@@ -446,17 +427,17 @@ td:last-child {
     margin-top: 12px;
     padding: 10px 18px;
     border-radius: 7px;
-    background-color: var(--primary);
+    background: var(--primary);
     color: white;
     font-size: 14px;
     font-weight: bold;
 }
 
 .opcao-menu:hover .acao-menu {
-    background-color: var(--primary-dark);
+    background: var(--primary-dark);
 }
 
-/* NAVEGACAO ENTRE PAGINAS */
+/* NAVEGACAO */
 
 .navegacao {
     display: flex;
@@ -478,7 +459,7 @@ td:last-child {
     text-decoration: underline;
 }
 
-/* LINKS COM APARENCIA DE BOTAO */
+/* LINKS COMO BOTOES */
 
 .botao-link {
     display: inline-flex;
@@ -486,26 +467,25 @@ td:last-child {
     justify-content: center;
     min-height: 42px;
     padding: 11px 18px;
-    background-color: #e2e8f0;
+    background: #e2e8f0;
     color: var(--text);
     border-radius: 7px;
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
-    transition: background-color 0.2s;
 }
 
 .botao-link:hover {
-    background-color: #cbd5e1;
+    background: #cbd5e1;
 }
 
 .botao-primario {
-    background-color: var(--primary);
+    background: var(--primary);
     color: white;
 }
 
 .botao-primario:hover {
-    background-color: var(--primary-dark);
+    background: var(--primary-dark);
 }
 
 /* RODAPE */
@@ -520,7 +500,6 @@ footer {
 /* RESPONSIVIDADE */
 
 @media (max-width: 768px) {
-
     header {
         padding: 20px 5%;
     }
@@ -585,7 +564,6 @@ footer {
 }
 
 @media (max-width: 480px) {
-
     header h1 {
         font-size: 25px;
     }

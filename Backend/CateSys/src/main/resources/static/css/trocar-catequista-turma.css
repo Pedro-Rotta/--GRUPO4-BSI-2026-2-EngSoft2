@@ -1,0 +1,126 @@
+
+/* F4 - TROCAR CATEQUISTA DA TURMA */
+
+#secaoTurma[hidden],
+#secaoTroca[hidden] {
+    display: none !important;
+}
+
+/* INFORMACOES DA TURMA */
+
+.info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-height: 88px;
+    padding: 16px 18px;
+
+    background: #f8fafc;
+    border: 1px solid #e7ebf0;
+    border-radius: 9px;
+}
+
+.info-label {
+    display: block;
+    margin-bottom: 4px;
+
+    color: #78879a;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.info-box strong {
+    color: #142d4c;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* CATEQUISTA ATUAL */
+
+.catequista-atual {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    padding: 18px;
+
+    background: #f1f7fc;
+    border: 1px solid #dceaf5;
+    border-radius: 10px;
+}
+
+.catequista-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 52px;
+    height: 52px;
+
+    background: #dcecf8;
+    color: #142d4c;
+    border-radius: 50%;
+    font-size: 24px;
+}
+
+#nomeCatequistaAtual {
+    color: #142d4c;
+    font-size: 16px;
+}
+
+/* FORMULARIO */
+
+#formTroca .form-label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#formTroca .form-select {
+    min-height: 44px;
+}
+
+#formTroca.tentou-enviar .form-select:invalid,
+#formTroca .form-select.is-invalid {
+    border-color: #dc3545;
+    background-color: #fff7f7;
+}
+
+#formTroca .form-select.is-invalid
+~ .invalid-feedback {
+    display: block;
+}
+
+/* MENSAGENS */
+
+#mensagem:empty {
+    display: none;
+}
+
+#mensagem {
+    margin-bottom: 20px;
+}
+
+#mensagem.alert {
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 768px) {
+
+    .info-box {
+        min-height: auto;
+    }
+
+    .catequista-atual {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    #formTroca .btn {
+        width: 100%;
+    }
+}
