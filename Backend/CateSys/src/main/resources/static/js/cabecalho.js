@@ -1,7 +1,6 @@
 // Preenche o menu lateral, o rodapé e a data com os dados da parametrização.
-// Os elementos são achados pelas classes do CSS do grupo (sidebar-brand, app-footer, today-date),
-// então funciona em qualquer tela que use esse layout, sem mudar o HTML dela.
-// Para usar numa tela: <script src="js/cabecalho.js"></script> no fim do <body>.
+// Os elementos são achados pelas classes do CSS,
+// então funciona em qualquer tela que use esse layout, sem mudar o HTML dela
 (function () {
     const marca = document.querySelector('.sidebar-brand');
     const icone = marca && marca.querySelector('img');
@@ -78,7 +77,7 @@
         }
     }
 
-    // A tela de parametrização chama isto depois de salvar, para o menu mudar na hora
+    // A tela de parametrização chama isso depois de salvar, para o menu mudar na hora
     window.atualizarCabecalho = atualizar;
 
     // Em telas baixas o menu rola: deixa o item da página atual visível.
