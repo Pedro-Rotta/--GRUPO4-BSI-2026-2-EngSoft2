@@ -21,6 +21,9 @@ public class AutenticarUsuarioControl {
 
     public record PrimeiroAcessoRequest(String nome, String cpf, String email, String senha) {}
 
+    public record NovoUsuarioRequest(String nome, String cpf, String email, String senha,
+                                     String loginAutorizador, String senhaAutorizador) {}
+
     public record LoginResponse(String nome, String token) {}
 
     private final PasswordEncoder passwordEncoder;
@@ -87,6 +90,43 @@ public class AutenticarUsuarioControl {
             conexao.rollback();
             throw e;
         }
+    }
+
+    // Cria um novo usuário pela tela de login. Só grava se um usuário de acesso total ativo
+    // autorizar com o próprio login e senha (o sistema não tem cadastro aberto).
+    @PostMapping("/usuarios")
+    public synchronized ResponseEntity<?> cadastrarUsuario(@RequestBody NovoUsuarioRequest request)
+            throws SQLException {
+        Secretaria novo = new Secretaria(request.nome(), request.cpf(), request.email(), request.senha());
+        List<String> erros = new java.util.ArrayList<>(novo.validar());
+        if (vazio(request.loginAutorizador()) || vazio(request.senhaAutorizador()))
+            erros.add("Informe o login e a senha do administrador que autoriza o cadastro");
+        if (!erros.isEmpty())
+            return ResponseEntity.badRequest().body(Map.of("erros", erros));
+
+        Conexao conexao = Conexao.getInstancia();
+        try {
+            Secretaria autorizador = new Secretaria().buscarPorLogin(request.loginAutorizador(), conexao);
+            if (autorizador == null || !senhaConfere(request.senhaAutorizador(), autorizador.getSenha())
+                    || !autorizador.estaAtiva())
+                return erro(conexao, HttpStatus.FORBIDDEN, "Autorização recusada: login ou senha do administrador incorretos");
+            if (novo.loginDuplicado(conexao))
+                return erro(conexao, HttpStatus.CONFLICT, "Já existe um usuário com este CPF ou e-mail");
+
+            novo.setSenha(passwordEncoder.encode(request.senha())); // grava só o hash
+            novo.gravar(conexao);
+            conexao.commit();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("mensagem", "Usuário criado com sucesso. Faça o login."));
+        } catch (SQLException | RuntimeException e) {
+            conexao.rollback();
+            throw e;
+        }
+    }
+
+    private ResponseEntity<?> erro(Conexao conexao, HttpStatus status, String mensagem) throws SQLException {
+        conexao.rollback();
+        return ResponseEntity.status(status).body(Map.of("erros", List.of(mensagem)));
     }
 
     @ExceptionHandler(SQLException.class)

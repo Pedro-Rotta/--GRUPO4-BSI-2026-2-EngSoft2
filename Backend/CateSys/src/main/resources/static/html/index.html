@@ -68,7 +68,60 @@
                 Entrar
             </button>
 
+            <button type="button" id="btnMostrarNovoUsuario" class="btn btn-outline-secondary w-100 mt-2">
+                <i class="bi bi-person-plus me-1"></i>
+                Criar usuário
+            </button>
+
             <div id="mensagemLogin" class="alert d-none mt-3 mb-0" role="alert"></div>
+        </form>
+
+        <!-- CRIAR USUÁRIO: só grava com a autorização de um administrador (login e senha dele) -->
+        <form class="login-card d-none" id="formNovoUsuario" novalidate>
+
+            <h1>NOVO USUÁRIO</h1>
+
+            <p class="login-subtitle">
+                Cadastro autorizado por um administrador
+            </p>
+
+            <label class="form-label" for="nuNome">Nome</label>
+            <input class="form-control login-input" id="nuNome" type="text" required autocomplete="off">
+
+            <label class="form-label mt-3" for="nuCpf">CPF</label>
+            <input class="form-control login-input" id="nuCpf" type="text" required inputmode="numeric"
+                   maxlength="14" placeholder="000.000.000-00">
+
+            <label class="form-label mt-3" for="nuEmail">E-mail</label>
+            <input class="form-control login-input" id="nuEmail" type="email" required autocomplete="off">
+
+            <label class="form-label mt-3" for="nuSenha">Senha</label>
+            <input class="form-control login-input" id="nuSenha" type="password" required minlength="6"
+                   autocomplete="new-password" placeholder="Mínimo de 6 caracteres">
+
+            <hr class="my-4">
+
+            <p class="small text-muted mb-2">
+                <i class="bi bi-shield-lock me-1"></i>
+                Autorização do administrador
+            </p>
+
+            <label class="form-label" for="nuLoginAutorizador">CPF ou e-mail do administrador</label>
+            <input class="form-control login-input" id="nuLoginAutorizador" type="text" required autocomplete="off">
+
+            <label class="form-label mt-3" for="nuSenhaAutorizador">Senha do administrador</label>
+            <input class="form-control login-input" id="nuSenhaAutorizador" type="password" required
+                   autocomplete="off">
+
+            <button type="submit" id="btnNovoUsuario" class="btn btn-primary w-100 login-submit mt-4">
+                Criar usuário
+            </button>
+
+            <button type="button" id="btnVoltarLogin" class="btn btn-outline-secondary w-100 mt-2">
+                Voltar ao login
+            </button>
+
+            <div id="mensagemNovoUsuario" class="alert d-none mt-3 mb-0" role="alert"></div>
         </form>
 
         <!-- PRIMEIRO ACESSO: só aparece enquanto o sistema não tem nenhum usuário -->

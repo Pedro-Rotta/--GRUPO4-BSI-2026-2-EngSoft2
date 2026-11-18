@@ -96,6 +96,58 @@
         }
     });
 
+    // ---------- Criar usuário (com autorização de um administrador) ----------
+
+    const formNovoUsuario = document.getElementById("formNovoUsuario");
+    const cpfNovo = document.getElementById("nuCpf");
+    cpfNovo.addEventListener("input", () => cpfNovo.value = mascaraCpf(cpfNovo.value));
+
+    function trocarFormulario(mostrarNovo) {
+        formLogin.classList.toggle("d-none", mostrarNovo);
+        formNovoUsuario.classList.toggle("d-none", !mostrarNovo);
+        esconder("mensagemLogin");
+        esconder("mensagemNovoUsuario");
+    }
+
+    document.getElementById("btnMostrarNovoUsuario").addEventListener("click", () => trocarFormulario(true));
+    document.getElementById("btnVoltarLogin").addEventListener("click", () => trocarFormulario(false));
+
+    formNovoUsuario.addEventListener("submit", async evento => {
+        evento.preventDefault();
+        esconder("mensagemNovoUsuario");
+        formNovoUsuario.classList.add("was-validated");
+        if (!formNovoUsuario.checkValidity()) {
+            mostrar("mensagemNovoUsuario", "Preencha os campos destacados.", "warning");
+            return;
+        }
+        const botao = document.getElementById("btnNovoUsuario");
+        botao.disabled = true;
+        try {
+            const resposta = await postar("/auth/usuarios", {
+                nome: document.getElementById("nuNome").value.trim(),
+                cpf: cpfNovo.value.replace(/\D/g, ""),
+                email: document.getElementById("nuEmail").value.trim(),
+                senha: document.getElementById("nuSenha").value,
+                loginAutorizador: document.getElementById("nuLoginAutorizador").value.trim(),
+                senhaAutorizador: document.getElementById("nuSenhaAutorizador").value
+            });
+            if (resposta.ok) {
+                const login = document.getElementById("nuEmail").value.trim();
+                formNovoUsuario.reset();
+                formNovoUsuario.classList.remove("was-validated");
+                trocarFormulario(false);
+                document.getElementById("loginUser").value = login;
+                mostrar("mensagemLogin", "Usuário criado com sucesso. Informe a senha para entrar.", "success");
+            } else {
+                mostrar("mensagemNovoUsuario", await lerErros(resposta));
+            }
+        } catch (e) {
+            mostrar("mensagemNovoUsuario", "Não foi possível conectar ao servidor.");
+        } finally {
+            botao.disabled = false;
+        }
+    });
+
     // Sem nenhum usuário cadastrado, mostra o cadastro do administrador inicial (uso único).
     fetch("/auth/primeiro-acesso")
         .then(resposta => resposta.ok ? resposta.json() : null)

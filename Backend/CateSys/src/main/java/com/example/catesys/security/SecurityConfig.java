@@ -35,6 +35,8 @@ public class SecurityConfig {
                                 "/html/**", "/css/**", "/js/**", "/imgs/**", "/img/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers("/auth/primeiro-acesso").permitAll()
+                        // Criar usuário pelo login: a própria Control exige login e senha de um administrador.
+                        .requestMatchers(HttpMethod.POST, "/auth/usuarios").permitAll()
                         // Nome e logotipos da paróquia aparecem antes do login.
                         .requestMatchers(HttpMethod.GET, "/api/parametrizacao").permitAll()
                         .anyRequest().authenticated()
