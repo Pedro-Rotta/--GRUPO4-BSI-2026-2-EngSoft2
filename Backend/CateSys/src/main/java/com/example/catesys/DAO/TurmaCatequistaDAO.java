@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Não implementa IDAO: o vínculo não tem id próprio nem CRUD completo (SOLID-I).
-// A gravação do primeiro vínculo é feita pelo TurmaDAO, junto com a turma (RF_F5).
+// Na oferta (RF_F5) o primeiro vínculo é gravado pelo TurmaDAO, junto com a turma.
 public class TurmaCatequistaDAO {
     private final Conexao conexao;
 
@@ -44,6 +44,15 @@ public class TurmaCatequistaDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
+        }
+    }
+
+    public boolean gravar(TurmaCatequista vinculo) throws SQLException {
+        String sql = "INSERT INTO turma_catequista (catequista_catequista_id, turma_turma_id) VALUES (?, ?)";
+        try (PreparedStatement ps = conexao.getConnection().prepareStatement(sql)) {
+            ps.setInt(1, vinculo.getCatequistaId());
+            ps.setInt(2, vinculo.getTurmaId());
+            return ps.executeUpdate() == 1;
         }
     }
 

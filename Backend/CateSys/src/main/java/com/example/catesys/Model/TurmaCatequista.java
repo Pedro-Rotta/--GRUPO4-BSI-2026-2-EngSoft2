@@ -11,7 +11,7 @@ public class TurmaCatequista {
     private int catequistaId;
     private int turmaId;
 
-    // RF_F4: a Control instancia o vínculo atual (turma + catequista que sai).
+    // A Control instancia o vínculo atual (turma + catequista).
     public TurmaCatequista(int catequistaId, int turmaId) {
         this.catequistaId = catequistaId;
         this.turmaId = turmaId;
@@ -26,6 +26,11 @@ public class TurmaCatequista {
     }
 
     // Persistência: a Model instancia o DAO com a Conexao recebida da Control.
+
+    // Vincula o catequista à turma (turma que ainda não tinha catequista).
+    public boolean gravar(Conexao conexao) throws SQLException {
+        return new TurmaCatequistaDAO(conexao).gravar(this);
+    }
 
     public boolean existe(Conexao conexao) throws SQLException {
         return new TurmaCatequistaDAO(conexao).existeVinculo(this);

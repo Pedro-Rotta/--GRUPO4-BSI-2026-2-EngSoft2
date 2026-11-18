@@ -97,7 +97,7 @@ public class OfertarTurmaControl {
                 converter(request.dataInicio()), converter(request.dataFim()),
                 valor(request.vagas()), valor(request.catequistaId()),
                 valor(request.localId()), valor(request.horarioId()));
-        List<String> erros = turma.validar();
+        List<String> erros = turma.validarOferta();
         if (!erros.isEmpty())
             return ResponseEntity.badRequest().body(Map.of("erros", erros));
 

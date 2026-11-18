@@ -171,8 +171,18 @@ function conferirCapacidade() {
 function conferirDatas() {
     const inicio = $("dataInicio").value;
     const fim = $("dataFim");
+    $("dataInicio").setCustomValidity(inicio && inicio < hoje() ? "início antes de hoje" : "");
     fim.setCustomValidity(inicio && fim.value && fim.value <= inicio ? "término antes do início" : "");
 }
+
+// Data de hoje no formato do campo (aaaa-mm-dd), no fuso do navegador.
+function hoje() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+// O "min" é definido uma vez só, ao abrir a tela: o calendário já não oferece datas passadas.
+$("dataInicio").min = hoje();
 
 // Enquanto o ano é digitado o campo já tem valor ("0002", "0020"...): só considera ano com 4 dígitos.
 const dataCompleta = (valor) => /^\d{4}-\d{2}-\d{2}$/.test(valor) && Number(valor.slice(0, 4)) >= 1900;

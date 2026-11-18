@@ -21,7 +21,6 @@
 
     <script src="/js/auth.js"></script>
     <script src="/js/menu.js" defer></script>
-    <script src="/js/turmas.js" defer></script>
 </head>
 
 <body>
@@ -60,179 +59,53 @@
         <div class="page-content">
 
             <div class="page-heading">
-
                 <div>
                     <h1>Gerenciar Turmas</h1>
-
-                    <p>
-                        Cadastre turmas, consulte os registros
-                        e gerencie os catequistas responsáveis.
-                    </p>
+                    <p>Oferte novas turmas ou altere os dados de uma turma existente.</p>
                 </div>
-
             </div>
 
-            <!-- ACOES -->
+            <div class="row g-3">
 
-            <div class="row g-3 mb-4">
-
-                <div class="col-md-4">
-
+                <div class="col-md-6">
                     <div class="card h-100">
-
                         <div class="card-body">
-
                             <div class="stat-icon icon-blue">
                                 <i class="bi bi-plus-circle"></i>
                             </div>
-
-                            <h2 class="card-title-cs mb-3">
-                                Ofertar Turma
-                            </h2>
-
+                            <h2 class="card-title-cs mb-3">Nova turma</h2>
                             <p class="text-muted small">
-                                Crie uma turma informando
-                                a etapa, o período, as vagas,
-                                o local, o horário e o catequista.
+                                Oferte uma turma informando a etapa, o período (a partir de hoje),
+                                as vagas, o local, o horário e o catequista.
                             </p>
-
-                            <a
-                                href="/html/ofertar-turma.html"
-                                class="btn btn-primary">
+                            <a href="/html/ofertar-turma.html" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i>
-                                Nova Turma
+                                Nova turma
                             </a>
-
                         </div>
-
                     </div>
-
                 </div>
 
-                <div class="col-md-4">
-
+                <div class="col-md-6">
                     <div class="card h-100">
-
                         <div class="card-body">
-
                             <div class="stat-icon icon-gold">
-                                <i class="bi bi-arrow-left-right"></i>
+                                <i class="bi bi-pencil-square"></i>
                             </div>
-
-                            <h2 class="card-title-cs mb-3">
-                                Trocar Catequista da Turma
-                            </h2>
-
+                            <h2 class="card-title-cs mb-3">Editar turma</h2>
                             <p class="text-muted small">
-                                Selecione uma turma existente
-                                e substitua um dos catequistas
-                                vinculados.
+                                Escolha uma turma e altere etapa, período, vagas, status,
+                                catequista, local e horário, conferindo a disponibilidade.
                             </p>
-
-                            <a
-                                href="/html/trocar-catequista-turma.html"
-                                class="btn btn-primary">
-                                <i class="bi bi-arrow-left-right me-1"></i>
-                                Trocar Catequista
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="stat-icon icon-blue">
-                                <i class="bi bi-geo-alt"></i>
-                            </div>
-                            <h2 class="card-title-cs mb-3">
-                                Atribuir Local à Turma
-                            </h2>
-                            <p class="text-muted small">
-                                Troque o local e o horário de uma turma,
-                                conferindo a agenda do local e do catequista.
-                            </p>
-                            <a
-                                href="/html/atribuir-local.html"
-                                class="btn btn-primary">
-                                <i class="bi bi-geo-alt me-1"></i>
-                                Atribuir Local
+                            <a href="/html/editar-turma.html" class="btn btn-primary">
+                                <i class="bi bi-pencil me-1"></i>
+                                Editar turma
                             </a>
                         </div>
                     </div>
-
                 </div>
 
             </div>
-
-            <!-- CONSULTA -->
-
-            <section class="card">
-
-                <div class="card-body">
-
-                    <div
-                        class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
-
-                        <h2 class="card-title-cs">
-                            <i class="bi bi-list-ul me-2"></i>
-                            Turmas Cadastradas
-                        </h2>
-
-                        <button
-                            type="button"
-                            id="btnAtualizar"
-                            class="btn btn-outline-secondary">
-
-                            <i class="bi bi-arrow-clockwise me-1"></i>
-                            Atualizar
-
-                        </button>
-
-                    </div>
-
-                    <div class="table-responsive">
-
-                        <table class="table align-middle">
-
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Etapa</th>
-                                <th>Ano de oferta</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                            </thead>
-
-                            <tbody id="tabelaTurmas">
-
-                            <tr>
-                                <td
-                                    colspan="5"
-                                    class="text-center text-muted py-4">
-                                    Carregando turmas...
-                                </td>
-                            </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                    <div
-                        id="mensagemTurmas"
-                        role="status"
-                        aria-live="polite"></div>
-
-                </div>
-
-            </section>
 
         </div>
 

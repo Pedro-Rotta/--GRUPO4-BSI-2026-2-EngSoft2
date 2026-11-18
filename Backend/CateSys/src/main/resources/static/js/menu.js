@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { titulo: "Catequistas", url: "/html/catequistas.html", icone: "bi-person-badge" },
         {
             titulo: "Turmas", url: "/html/turmas.html", icone: "bi-easel",
-            relacionadas: ["/html/ofertar-turma.html", "/html/atribuir-local.html", "/html/trocar-catequista-turma.html"]
+            relacionadas: ["/html/ofertar-turma.html", "/html/editar-turma.html"]
         },
         { titulo: "Salas e locais", url: "/html/salas.html", icone: "bi-building" },
         { titulo: "Presença", url: "/html/presenca.html", icone: "bi-calendar-check" },

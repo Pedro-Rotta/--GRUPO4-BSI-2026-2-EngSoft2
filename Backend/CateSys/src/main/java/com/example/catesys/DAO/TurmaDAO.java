@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// Não implementa IDAO: os casos de uso desta parte (RF_F5 e RF_F8) não excluem turma,
+// Não implementa IDAO: os casos de uso de turma (RF_F5 e RF_B5) não excluem turma,
 // e a exclusão apagaria matrículas em cascata. Fica só com o que é usado (SOLID-I).
 public class TurmaDAO {
     private final Conexao conexao;
@@ -56,13 +56,24 @@ public class TurmaDAO {
         }
     }
 
-    // RF_F8: troca local e horário da turma.
-    public boolean alterarLocal(Turma turma) throws SQLException {
-        String sql = "UPDATE turma SET sala_local_id = ?, horario_horario_id = ? WHERE turma_id = ?";
+    // RF_B5: altera todos os dados da turma (o catequista fica em turma_catequista).
+    public boolean alterar(Turma turma) throws SQLException {
+        String sql = """
+                UPDATE turma SET etapa = ?, ano_oferta = ?, data_inicio = ?, data_fim = ?, vagas_totais = ?,
+                vagas_disponiveis = ?, status = ?, sala_local_id = ?, horario_horario_id = ?
+                WHERE turma_id = ?
+                """;
         try (PreparedStatement ps = conexao.getConnection().prepareStatement(sql)) {
-            ps.setInt(1, turma.getLocalId());
-            ps.setInt(2, turma.getHorarioId());
-            ps.setInt(3, turma.getId());
+            ps.setString(1, turma.getEtapa().name());
+            ps.setString(2, turma.getAnoOferta());
+            definirData(ps, 3, turma.getDataInicio());
+            definirData(ps, 4, turma.getDataFim());
+            ps.setInt(5, turma.getVagasTotais());
+            ps.setInt(6, turma.getVagasDisponiveis());
+            ps.setString(7, turma.getStatus().name());
+            ps.setInt(8, turma.getLocalId());
+            ps.setInt(9, turma.getHorarioId());
+            ps.setInt(10, turma.getId());
             return ps.executeUpdate() > 0;
         }
     }

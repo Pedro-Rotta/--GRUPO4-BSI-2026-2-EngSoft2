@@ -80,17 +80,50 @@ public class Turma {
             erros.add("Data de término deve ser posterior à data de início");
         if (vagasTotais <= 0)
             erros.add("Limite de vagas deve ser maior que zero");
-        if (vagasDisponiveis < 0 || vagasDisponiveis > vagasTotais)
+        else if (vagasDisponiveis < 0)
+            erros.add("Limite de vagas menor que as " + vagasOcupadas() + " matrículas da turma");
+        else if (vagasDisponiveis > vagasTotais)
             erros.add("Vagas disponíveis devem ficar entre 0 e o limite de vagas");
+        if (status == null)
+            erros.add("Status é obrigatório");
         return erros;
     }
 
-    // Turma encerrada ou cancelada não ocupa local nem agenda e não pode mudar de local.
+    // RF_F5: além das regras gerais, a oferta não pode começar antes de hoje.
+    public List<String> validarOferta() {
+        List<String> erros = validar();
+        if (comecaAntesDeHoje())
+            erros.add("A data de início não pode ser anterior à data atual");
+        return erros;
+    }
+
+    public boolean comecaAntesDeHoje() {
+        return dataInicio != null && paraLocalDate(dataInicio).isBefore(LocalDate.now());
+    }
+
+    // Turma encerrada ou cancelada não ocupa local nem agenda.
     public boolean estaAtiva() {
         return status != StatusTurma.ENCERRADA && status != StatusTurma.CANCELADA;
     }
 
-    public void atribuirLocal(int localId, int horarioId) {
+    // Vagas já preenchidas por matrícula.
+    public int vagasOcupadas() {
+        return vagasTotais - vagasDisponiveis;
+    }
+
+    // RF_B5 Alterar Turma: troca os dados editáveis e recalcula o ano e as vagas livres,
+    // mantendo as vagas já ocupadas por matrícula.
+    public void alterarDados(Etapa etapa, Date dataInicio, Date dataFim, int vagasTotais, StatusTurma status,
+                             int catequistaId, int localId, int horarioId) {
+        int ocupadas = vagasOcupadas();
+        this.etapa = etapa;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.anoOferta = dataInicio == null ? null : String.valueOf(paraLocalDate(dataInicio).getYear());
+        this.vagasTotais = vagasTotais;
+        this.vagasDisponiveis = vagasTotais - ocupadas;
+        this.status = status;
+        this.catequistaId = catequistaId;
         this.localId = localId;
         this.horarioId = horarioId;
     }
@@ -106,8 +139,8 @@ public class Turma {
         return new TurmaDAO(conexao).gravar(this);
     }
 
-    public boolean alterarLocal(Conexao conexao) throws SQLException {
-        return new TurmaDAO(conexao).alterarLocal(this);
+    public boolean alterar(Conexao conexao) throws SQLException {
+        return new TurmaDAO(conexao).alterar(this);
     }
 
     public Turma buscarPorId(int id, Conexao conexao) throws SQLException {
