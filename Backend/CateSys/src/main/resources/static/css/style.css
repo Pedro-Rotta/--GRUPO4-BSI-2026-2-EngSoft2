@@ -471,6 +471,22 @@ h1, h2, h3, h4, h5 {
     color: var(--navy);
 }
 
+/* Logo da tela "Sobre": cabe na coluna e não passa por cima do texto */
+.sobre-logo {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.badge-neutral {
+    color: var(--navy);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    font-weight: 600;
+}
+
 .brand-cross {
     position: absolute;
     top: -10px;
@@ -605,5 +621,17 @@ h1, h2, h3, h4, h5 {
 
     .login-card {
         padding: 25px;
+    }
+
+    .sobre-logo {
+        max-width: 120px;
+    }
+
+    .sobre-texto {
+        text-align: center;
+    }
+
+    .sobre-texto .badge-list {
+        justify-content: center;
     }
 }

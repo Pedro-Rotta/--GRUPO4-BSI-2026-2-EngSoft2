@@ -85,7 +85,9 @@ public class SecretariaDAO implements IDAO<Secretaria> {
     public Secretaria buscarPorLogin(String login) throws SQLException {
         if (login == null || login.isBlank())
             return null;
-        String sql = SELECT_SECRETARIA + " WHERE LOWER(email) = LOWER(?) OR cpf = ? LIMIT 1";
+        // O CPF pode estar gravado com ou sem máscara: compara só os dígitos dos dois lados.
+        String sql = SELECT_SECRETARIA
+                + " WHERE LOWER(email) = LOWER(?) OR REGEXP_REPLACE(cpf, '\\D', '', 'g') = ? LIMIT 1";
         try (PreparedStatement ps = conexao.getConnection().prepareStatement(sql)) {
             ps.setString(1, login.trim());
             ps.setString(2, login.replaceAll("\\D", ""));
