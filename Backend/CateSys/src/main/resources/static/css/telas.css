@@ -55,6 +55,11 @@
     grid-column: span 2;
 }
 
+/* Campo curto (ex.: UF): não ocupa a coluna inteira */
+.campo.estreito {
+    max-width: 120px;
+}
+
 .campo label {
     font-size: .82rem;
     font-weight: 600;

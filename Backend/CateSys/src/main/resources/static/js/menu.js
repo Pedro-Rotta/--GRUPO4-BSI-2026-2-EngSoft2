@@ -105,7 +105,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const sair = document.createElement("a");
     sair.href = "/html/index.html";
     sair.className = "btn-logout";
-    sair.textContent = "Sair";
+    const iconeSair = document.createElement("i");
+    iconeSair.className = "bi bi-box-arrow-left";
+    sair.append(iconeSair, " Sair");
 
     rodape.append(grupo, sair);
     sidebar.appendChild(rodape);

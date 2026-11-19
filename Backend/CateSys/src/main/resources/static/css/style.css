@@ -487,6 +487,41 @@ h1, h2, h3, h4, h5 {
     font-weight: 600;
 }
 
+.badge-success {
+    color: #146c43;
+    background: #d1f0df;
+    font-weight: 600;
+}
+
+.badge-danger {
+    color: #b02a37;
+    background: #fbe0e3;
+    font-weight: 600;
+}
+
+.text-navy {
+    color: var(--navy);
+}
+
+/* Rótulo pequeno acima de um título (ex.: "CATESYS · RELATÓRIO") */
+.eyebrow {
+    color: var(--muted);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+/* Aviso informativo dentro de um cartão */
+.notice {
+    font-size: .85rem;
+    border-radius: 10px;
+}
+
+/* CPF abaixo do nome na lista de chamada */
+.attendance-cpf {
+    font-size: .78rem;
+}
+
 .brand-cross {
     position: absolute;
     top: -10px;
