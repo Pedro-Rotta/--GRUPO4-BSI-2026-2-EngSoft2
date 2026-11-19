@@ -12,18 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+// Caso de uso: matricular catequizando.
+// O Spring cria uma única instância desta classe, então ela já funciona como Singleton.
 @RestController
 @RequestMapping("/api/matriculas")
-public class GerenciarMatriculaControl {
+public class MatricularControl {
 
-    // Secretária provisório "admin" do banco. Quando o login existir, trocar pela secretária logada.
+    // Provisório: a secretária "admin" do banco. Quando o login existir, troca pela secretária logada.
     private static final int SECRETARIA_PROVISORIA = 3;
-
-    // ---------- Listas para preencher as telas ----------
 
     // Catequizandos que ainda podem ser matriculados
     @GetMapping("/catequizandos-disponiveis")
@@ -49,20 +48,7 @@ public class GerenciarMatriculaControl {
         }
     }
 
-    // Catequizandos matriculados, com a turma de cada um (para desmatricular)
-    @GetMapping("/catequizandos-matriculados")
-    public synchronized ResponseEntity<?> catequizandosMatriculados() throws SQLException {
-        Conexao conexao = Conexao.getInstancia();
-        Matricula model = new Matricula(conexao.getConnection());
-        try {
-            return ResponseEntity.ok(model.listarCatequizandosComMatriculaAtiva());
-        } finally {
-            conexao.rollback();
-        }
-    }
-
-    // ---------- F1: Matricular ----------
-
+    // Recebe {"catequizandoId": 29, "turmaId": 17}. Devolve 201 se matriculou ou 400 com os erros por campo.
     @PostMapping
     public synchronized ResponseEntity<?> matricular(@RequestBody Map<String, Object> dados) throws SQLException {
         Conexao conexao = Conexao.getInstancia();
@@ -85,39 +71,11 @@ public class GerenciarMatriculaControl {
         resposta.put("matriculaId", model.getId());
         resposta.put("catequizandoId", model.getCatequizandoId());
         resposta.put("turmaId", model.getTurmaId());
-        resposta.put("dataMatricula", formatar(model.getDataMatricula()));
+        resposta.put("dataMatricula", new SimpleDateFormat("yyyy-MM-dd").format(model.getDataMatricula()));
         return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
     }
 
-    // ---------- F2: Desmatricular ----------
-
-    @PostMapping("/desmatricular")
-    public synchronized ResponseEntity<?> desmatricular(@RequestBody Map<String, Object> dados) throws SQLException {
-        Conexao conexao = Conexao.getInstancia();
-        Matricula model = new Matricula(conexao.getConnection());
-        try {
-            Object motivo = dados.get("motivo");
-            Map<String, String> erros = model.desmatricular(
-                    inteiro(dados.get("catequizandoId")), motivo == null ? null : motivo.toString());
-            if (!erros.isEmpty()) {
-                conexao.rollback();
-                return ResponseEntity.badRequest().body(Map.of("erros", erros));
-            }
-            conexao.commit();
-        } catch (SQLException | RuntimeException e) {
-            conexao.rollback();
-            throw e;
-        }
-
-        Map<String, Object> resposta = new LinkedHashMap<>();
-        resposta.put("mensagem", "Matrícula encerrada com sucesso");
-        resposta.put("matriculaId", model.getId());
-        resposta.put("catequizandoId", model.getCatequizandoId());
-        resposta.put("turmaId", model.getTurmaId());
-        resposta.put("dataDesistencia", formatar(model.getDataDesistencia()));
-        return ResponseEntity.ok(resposta);
-    }
-
+    // O JSON pode mandar o id como número (29) ou como texto ("29"). Se não der para ler, vira 0.
     private int inteiro(Object valor) {
         if (valor instanceof Number n) {
             return n.intValue();
@@ -127,10 +85,5 @@ public class GerenciarMatriculaControl {
         } catch (NumberFormatException e) {
             return 0;
         }
-    }
-
-    // A data vai na resposta como "yyyy-MM-dd"
-    private String formatar(Date data) {
-        return new SimpleDateFormat("yyyy-MM-dd").format(data);
     }
 }
